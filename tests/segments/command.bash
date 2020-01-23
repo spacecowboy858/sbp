@@ -1,3 +1,7 @@
+
+# shellcheck source=functions/decorate.bash
+source "${sbp_path}/functions/decorate.bash"
+
 function test_that_we_get_the_right_spent_time() {
   local result
   result=$("${sbp_path}/segments/command.bash" 0 5)

@@ -18,9 +18,6 @@ else
   export date_cmd='date'
 fi
 
-SHELL_BIRTH=$(( $(date +'%s') - SECONDS ))
-export SHELL_BIRTH
-
 _sbp_timer_start() {
   timer_start=$("$date_cmd" +'%s%3N')
 }
@@ -47,14 +44,14 @@ _sbp_set_prompt() {
   [[ -n "$SBP_DEBUG" ]] && _sbp_timer_start
   local last_history command_started command_ended command_time
   last_history=$(HISTTIMEFORMAT='%s ' history 1)
-  last_history=${last_history##*  }
+  last_history="${last_history//  / }"
 
   if [[ -z "$_sbp_previous_history" || "$last_history" == "$_sbp_previous_history" ]]; then
     command_exit_code=
     command_time=
   else
-    command_ended=$(( SHELL_BIRTH + SECONDS ))
-    command_started=${last_history/ *}
+    command_ended=$(date +'%s')
+    command_started=$(echo "$last_history" | cut -d ' ' -f 2)
     command_time=$(( command_ended - command_started ))
   fi
 

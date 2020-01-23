@@ -102,7 +102,3 @@ load_config() {
   source "$colors_file"
   set +a
 }
-
-export -f load_config
-export -f set_layout
-export -f set_colors

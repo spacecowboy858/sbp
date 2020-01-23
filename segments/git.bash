@@ -1,5 +1,8 @@
 #! /usr/bin/env bash
 
+# shellcheck source=functions/decorate.bash
+source "${sbp_path}/functions/decorate.bash"
+
 segment_direction=$3
 settings_git_max_length=$4
 

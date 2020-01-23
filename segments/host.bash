@@ -1,5 +1,8 @@
 #! /usr/bin/env bash
 
+# shellcheck source=functions/decorate.bash
+source "${sbp_path}/functions/decorate.bash"
+
 segment_direction=$3
 
 if [[ -n "$SSH_CLIENT" ]]; then

@@ -1,4 +1,7 @@
 #! /usr/bin/env bash
+
+# shellcheck source=functions/decorate.bash
+source "${sbp_path}/functions/decorate.bash"
 segment_direction=$3
 if grep -q token "${HOME}/.kube/config" &>/dev/null; then
   config="$(sed -n 's|current-context: \(.*\)/\(.*\)/\(.*\)$|\1;\2;\3|p' "${HOME}/.kube/config")"

@@ -1,5 +1,8 @@
 #! /usr/bin/env bash
 
+# shellcheck source=functions/decorate.bash
+source "${sbp_path}/functions/decorate.bash"
+
 segment_direction=$3
 if [[ "$settings_prompt_ready_vi_mode" -eq 1 ]]; then
   exit 0

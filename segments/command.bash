@@ -1,5 +1,8 @@
 #! /usr/bin/env bash
 
+# shellcheck source=functions/decorate.bash
+source "${sbp_path}/functions/decorate.bash"
+
 command_exit_code=$1
 command_time=$2
 segment_direction=$3

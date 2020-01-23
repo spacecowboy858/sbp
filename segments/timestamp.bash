@@ -1,5 +1,8 @@
 #! /usr/bin/env bash
 
+# shellcheck source=functions/decorate.bash
+source "${sbp_path}/functions/decorate.bash"
+
 segment_direction=$3
 
 timestamp_value=$(date +"$settings_timestamp_format")

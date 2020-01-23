@@ -139,12 +139,3 @@ pretty_print_seperator() {
 strip_escaped_colors() {
   sed -E 's/\\\[\\e\[[0123456789]([0123456789;])+m\\\]//g' <<< "$1"
 }
-
-export -f pretty_print_segment
-export -f pretty_print_splitter
-export -f pretty_print_seperator
-export -f strip_escaped_colors
-export -f print_colors
-export -f print_bg_color
-export -f print_fg_color
-export -f get_complement_rgb
