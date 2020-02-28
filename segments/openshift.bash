@@ -3,13 +3,17 @@ segment_direction=$3
 if grep -q token "${HOME}/.kube/config" &>/dev/null; then
   config="$(sed -n 's|current-context: \(.*\)/\(.*\)/\(.*\)$|\1;\2;\3|p' "${HOME}/.kube/config")"
   project="$(cut -d ';' -f 1 <<<"$config")"
-  server="$(cut -d ';' -f 2 <<<"$config" | sed 's/:443//')"
+  cluster="$(cut -d ';' -f 2 <<<"$config" | sed 's/:443//')"
   user="$(cut -d ';' -f 3 <<<"$config")"
 
   if [[ "${user,,}" == "${settings_openshift_default_user,,}" ]]; then
-    segment="${server}:${project}"
+    if [[ "$settings_openshift_hide_cluster" -eq 1 ]]; then
+      segment="${project}"
+    else
+      segment="${cluster}:${project}"
+    fi
   else
-    segment="${user}@${server}:${project}"
+    segment="${user}@${cluster}:${project}"
   fi
 
   pretty_print_segment "$settings_openshift_color_primary" "$settings_openshift_color_secondary" " ${segment} " "$segment_direction"
