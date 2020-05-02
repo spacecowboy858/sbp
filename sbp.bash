@@ -10,7 +10,7 @@ source "${sbp_path}/functions/log.bash"
 # shellcheck source=functions/interact.bash
 source "${sbp_path}/functions/interact.bash"
 
-_sbp_previous_history=
+_sbp_cache="/tmp/sbp.${BASHPID}.cache"
 
 if [[ "$OSTYPE" == "darwin"* ]]; then
   export date_cmd='gdate'
@@ -43,37 +43,36 @@ fi
 #trap 'printf "\e[0n"' WINCH
 
 _sbp_set_prompt() {
-  local command_exit_code=$?
+  local command_status=$?
+  local sbp_cache=$1
+  local command_status sbp_cache current_time command_start command_duration
   [[ -n "$SBP_DEBUG" ]] && _sbp_timer_start
-  local last_history command_started command_ended command_time
-  # We need to re-evaluate this to remove excess spaces, so no quotes
-  last_history=$( echo $(HISTTIMEFORMAT='%s ' history 1))
-  # Remove the history index
-  last_history=${last_history#* }
-
-  if [[ -z "$_sbp_previous_history" || "$last_history" == "$_sbp_previous_history" ]]; then
-    command_exit_code=
-    command_time=
+  current_time=$(date +%s)
+  if [[ -f "$sbp_cache" ]]; then
+    command_start=$(< "$sbp_cache")
+    command_duration=$(( current_time - command_start ))
   else
-    command_ended=$(( SHELL_BIRTH + SECONDS ))
-    # Pick the timestamp only which is first
-    command_started=${last_history/ *}
-    command_time=$(( command_ended - command_started ))
+    command_duration=0
   fi
 
-  _sbp_previous_history=$last_history
-  unset last_history
-
-  title="${PWD##*/}"
-
   # TODO move this somewhere else
+  title="${PWD##*/}"
   if [[ -n "$SSH_CLIENT" ]]; then
     title="${HOSTNAME:-ssh}:${title}"
   fi
   printf '\e]2;%s\007' "$title"
 
-  PS1=$(bash "${sbp_path}/functions/generate.bash" "$COLUMNS" "$command_exit_code" "$command_time")
+  PS1=$(bash "${sbp_path}/functions/generate.bash" "$COLUMNS" "$command_status" "$command_duration")
   [[ -n "$SBP_DEBUG" ]] && _sbp_timer_tick "Done"
+
 }
 
-[[ "$PROMPT_COMMAND" =~ _sbp_set_prompt ]] || PROMPT_COMMAND="_sbp_set_prompt;$PROMPT_COMMAND"
+
+_sbp_pre_exec() {
+  local sbp_cache=$1
+  date +%s > "$sbp_cache"
+}
+
+PS0="\$(_sbp_pre_exec $_sbp_cache)"
+
+[[ "$PROMPT_COMMAND" =~ _sbp_set_prompt ]] || PROMPT_COMMAND="_sbp_set_prompt "$_sbp_cache";$PROMPT_COMMAND"
