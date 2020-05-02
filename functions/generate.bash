@@ -73,12 +73,7 @@ generate_prompt() {
   declare -A pid_two
 
   # Concurrent evaluation of promt segments
-  systemd_tmp="/run/user/${UID}/"
-  if [[ -d "${systemd_tmp}" ]]; then
-    tempdir=$(mktemp -d --tmpdir="$systemd_tmp") && trap 'rm -rf "$tempdir"' EXIT;
-  else
-    tempdir=$(mktemp -d) && trap 'rm -rf "$tempdir"' EXIT;
-  fi
+  tempdir=$_sbp_cache
 
   for i in "${!prompt_segments[@]}"; do
     segment_name="${prompt_segments[i]}"

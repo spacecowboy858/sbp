@@ -10,16 +10,20 @@ source "${sbp_path}/functions/log.bash"
 # shellcheck source=functions/interact.bash
 source "${sbp_path}/functions/interact.bash"
 
-_sbp_cache="/tmp/sbp.${BASHPID}.cache"
+
+if [[ -d "/run/user/${UID}" ]]; then
+  _sbp_cache==$(mktemp -d --tmpdir="/run/user/${UID}") && trap 'rm -rf "$tempdir"' EXIT;
+else
+  _sbp_cache=$(mktemp -d) && trap 'rm -rf "$tempdir"' EXIT;
+fi
+
+export _sbp_cache
 
 if [[ "$OSTYPE" == "darwin"* ]]; then
   export date_cmd='gdate'
 else
   export date_cmd='date'
 fi
-
-SHELL_BIRTH=$(( $(date +'%s') - SECONDS ))
-export SHELL_BIRTH
 
 _sbp_timer_start() {
   timer_start=$("$date_cmd" +'%s%3N')
@@ -40,17 +44,15 @@ if [[ -f "$options_file" ]]; then
   source "$options_file"
 fi
 
-#trap 'printf "\e[0n"' WINCH
-
 _sbp_set_prompt() {
   local command_status=$?
-  local sbp_cache=$1
-  local command_status sbp_cache current_time command_start command_duration
+  local command_status current_time command_start command_duration
   [[ -n "$SBP_DEBUG" ]] && _sbp_timer_start
   current_time=$(date +%s)
-  if [[ -f "$sbp_cache" ]]; then
-    command_start=$(< "$sbp_cache")
+  if [[ -f "${_sbp_cache}/execution" ]]; then
+    command_start=$(< "${_sbp_cache}/execution")
     command_duration=$(( current_time - command_start ))
+    rm "${_sbp_cache}/execution"
   else
     command_duration=0
   fi
@@ -67,12 +69,10 @@ _sbp_set_prompt() {
 
 }
 
-
 _sbp_pre_exec() {
-  local sbp_cache=$1
-  date +%s > "$sbp_cache"
+  date +%s > "${_sbp_cache}/execution"
 }
 
-PS0="\$(_sbp_pre_exec $_sbp_cache)"
+PS0="\$(_sbp_pre_exec)"
 
-[[ "$PROMPT_COMMAND" =~ _sbp_set_prompt ]] || PROMPT_COMMAND="_sbp_set_prompt "$_sbp_cache";$PROMPT_COMMAND"
+[[ "$PROMPT_COMMAND" =~ _sbp_set_prompt ]] || PROMPT_COMMAND="_sbp_set_prompt;$PROMPT_COMMAND"
