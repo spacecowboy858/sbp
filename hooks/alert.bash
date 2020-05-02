@@ -17,7 +17,7 @@ function alert_exec() { # User notification
   fi
 }
 
-function trigger_alert_hook {
+function hook_execute_alert {
   local exit_code=$1
   local command_time=$2
 
@@ -36,4 +36,3 @@ function trigger_alert_hook {
     alert_exec "$title" "$message"
   fi
 }
-trigger_alert_hook "$1" "$2"

@@ -38,7 +38,8 @@ execute_segment_script() {
   local segment_script="$(get_executable_script 'segment' "$segment")"
 
   if [[ -n "$segment_script" ]]; then
-    bash "$segment_script" "$command_exit_code" "$command_time" "$segment_direction" "$segment_max_length"
+    source "$segment_script"
+    "segment_generate_${segment}" "$command_exit_code" "$command_time" "$segment_direction" "$segment_max_length"
   fi
 }
 
@@ -47,7 +48,7 @@ execute_prompt_hooks() {
     local hook_script="$(get_executable_script 'hook' "$hook")"
 
     if [[ -n "$hook_script" ]]; then
-      (nohup bash "$hook_script" "$command_exit_code" "$command_time" &>/dev/null &)
+      (source "$hook_script" && nohup hook_execute_"$hook" "$command_exit_code" "$command_time" &>/dev/null &)
     fi
   done
 }
@@ -100,6 +101,7 @@ generate_prompt() {
 
   done
 
+
   total_empty_space="$columns"
 
   if [[ -n "${settings_prompt_prefix_upper}" ]]; then
@@ -137,6 +139,7 @@ generate_prompt() {
   if [[ "${settings_prompt_ready_newline}" -eq 1 ]]; then
     prompt_ready="\n${prompt_ready}"
   fi
+
 
   # Print the prompt and reset colors
   printf '%s' "${prompt_left}${prompt_filler}${prompt_right}${color_reset}${prompt_ready}${color_reset}"

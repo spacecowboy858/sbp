@@ -46,7 +46,7 @@ list_segments() {
     fi
 
     _sbp_timer_start
-    (bash "$segment" 0 0 left 0 &>/dev/null)
+    (source "$segment" && segment_generate_${segment_name} 0 0 left 0 &>/dev/null)
     duration=$(_sbp_timer_tick 2>&1 | tr -d ':')
 
     echo "${segment_name}: ${status}" "$duration"
