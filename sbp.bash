@@ -12,7 +12,7 @@ source "${sbp_path}/functions/interact.bash"
 
 
 if [[ -d "/run/user/${UID}" ]]; then
-  _sbp_cache==$(mktemp -d --tmpdir="/run/user/${UID}") && trap 'rm -rf "$tempdir"' EXIT;
+  _sbp_cache=$(mktemp -d --tmpdir="/run/user/${UID}") && trap 'rm -rf "$tempdir"' EXIT;
 else
   _sbp_cache=$(mktemp -d) && trap 'rm -rf "$tempdir"' EXIT;
 fi
