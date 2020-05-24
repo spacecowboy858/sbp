@@ -1,8 +1,6 @@
 #! /usr/bin/env bash
 
 segment_generate_python_env() {
-  local segment_direction=$3
-
   if [[ -n "$VIRTUAL_ENV" ]]; then
     segment_value="${VIRTUAL_ENV##*/}"
   else
@@ -17,6 +15,6 @@ segment_generate_python_env() {
   fi
 
   if [[ -n "$segment_value" ]]; then
-    pretty_print_segment "$settings_python_virtual_env_color_primary" "$settings_python_virtual_env_color_secondary" " ${segment_value} " "$segment_direction"
+    printf '%s' "$segment_value"
   fi
 }

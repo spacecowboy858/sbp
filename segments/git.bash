@@ -1,8 +1,7 @@
 #! /usr/bin/env bash
 
 segment_generate_git() {
-  local segment_direction=$3
-  local segment_max_length=$4
+  local segment_max_length=$3
 
   local incoming_icon="$settings_git_incoming_icon"
   local outgoing_icon="$settings_git_outgoing_icon"
@@ -79,7 +78,7 @@ segment_generate_git() {
     fi
   fi
 
-  segment_value=" ${git_state} ${settings_git_icon} ${git_head} ${upstream_status} "
+  segment_value="${git_state} ${settings_git_icon} ${git_head} ${upstream_status}"
 
-  pretty_print_segment "$settings_git_color_primary" "$settings_git_color_secondary" "${segment_value//  / }" "$segment_direction"
+  printf '%s' "${segment_value//  / }"
 }

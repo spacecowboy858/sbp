@@ -1,7 +1,6 @@
 #! /usr/bin/env bash
 
 segment_generate_path() {
-  local segment_direction=$3
   local segment_max_length=$4
 
   local path_value=
@@ -15,19 +14,17 @@ segment_generate_path() {
 
   IFS=/ read -r -a wdir_array <<<"${wdir}"
   if [[ $settings_path_splitter_disable -ne 1 && "${#wdir_array[@]}" -gt 1 ]]; then
-    splitter_segment="$(pretty_print_splitter "$settings_path_color_primary" "$settings_path_color_secondary" "$settings_path_splitter_color" "$segment_direction")"
-
     for i in "${!wdir_array[@]}"; do
       dir=${wdir_array["$i"]}
       if [[ -n "$dir" ]]; then
         segment_value=" ${dir} "
         [[ "$(( i + 1 ))" -eq "${#wdir_array[@]}" ]] && unset splitter_segment
-        path_value="${path_value}${segment_value}${splitter_segment}"
+        path_value="${path_value}${segment_value}${segment_splitter}"
       fi
     done
   else
-    path_value=" $wdir "
+    path_value="$wdir"
   fi
 
-  pretty_print_segment "$settings_path_color_primary" "$settings_path_color_secondary" "${path_value}" "$segment_direction"
+  printf '%s' "$path_value"
 }

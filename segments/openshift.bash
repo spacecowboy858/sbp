@@ -17,6 +17,6 @@ segment_generate_openshift() {
       segment="${user}@${cluster}:${project}"
     fi
 
-    pretty_print_segment "$settings_openshift_color_primary" "$settings_openshift_color_secondary" " ${segment} " "$segment_direction"
+    pretty_printf '%s' "$settings_openshift_color_primary" "$settings_openshift_color_secondary" " ${segment} " "$segment_direction"
   fi
 }

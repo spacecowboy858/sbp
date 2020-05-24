@@ -91,36 +91,41 @@ pretty_print_splitter() {
   printf '%s' "${splitter_on_color}${splitter_character}${splitter_off_color}"
 }
 
-pretty_print_segment() {
-  local primary_color="$1"
-  local secondary_color="$2"
-  local segment_value="$3"
-  local direction="$4"
+generate_segment() {
+  local segment=$1
+  local segment_direction=$2
+  local segment_max_length=$3
+  local segment_script="$(get_executable_script 'segment' "$segment")"
 
-  [[ -z "$segment_value" ]] && return 0
+  if [[ -n "$segment_script" ]]; then
+    source "$segment_script"
 
-  if [[ "$settings_segment_enable_bg_color" -eq 0 ]]; then
-    secondary_color="$primary_color"
-    primary_color=""
-    color="$(print_fg_color "$secondary_color")"
-
-    if [[ -z "${segment_value// /}" || -z "$direction" ]]; then
-      full_output="${color}${segment_value}"
-    else
-      full_output="${color}${settings_segment_separator_right}${segment_value}${settings_segment_separator_left}"
+    segment_splitter="$settings_segment_splitter_right"
+    if [[ "$segment_direction" == 'left' ]]; then
+      segment_seperator=""
+      segment_splitter="$settings_segment_splitter_right"
     fi
-  else
-    prepare_color="$(print_fg_color "$primary_color")"
-    seperator="$(pretty_print_seperator "$primary_color" "$direction")"
-    segment="$(print_colors "$secondary_color" "$primary_color")${segment_value}"
-    full_output="${seperator}${segment}${prepare_color}"
+
+    segment_result=" $("segment_generate_${segment}" "$command_exit_code" "$command_time" "$segment_max_length") "
+    segment_length=${#segment_result}
+    segment_exit_code=$?
+    [[ "$segment_exit_code" -eq 1 || -z "${segment_result// /}" ]] && return 1
+
+    primary_color_var="settings_${segment}_color_primary"
+    secondary_color_var="settings_${segment}_color_secondary"
+
+    if [[ "$segment_exit_code" -eq 3 ]]; then
+      primary_color_var="${primary_color_var}_highlight"
+      secondary_color_var="${fg_color_var}_highlight"
+    fi
+
+
+    primary_color="${!primary_color_var}"
+    secondary_color="${!secondary_color_var}"
+
+    print_themed_segment "$primary_color" "$secondary_color" "$segment_result" "$segment_direction" "$segment_length"
   fi
-
-  printf '%s' "$full_output"
-  uncolored=$(strip_escaped_colors "$full_output")
-  return "${#uncolored}"
 }
-
 
 pretty_print_seperator() {
   local to_color=$1
@@ -135,16 +140,3 @@ pretty_print_seperator() {
       ;;
   esac
 }
-
-strip_escaped_colors() {
-  sed -E 's/\\\[\\e\[[0123456789]([0123456789;])+m\\\]//g' <<< "$1"
-}
-
-export -f pretty_print_segment
-export -f pretty_print_splitter
-export -f pretty_print_seperator
-export -f strip_escaped_colors
-export -f print_colors
-export -f print_bg_color
-export -f print_fg_color
-export -f get_complement_rgb

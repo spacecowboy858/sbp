@@ -31,18 +31,6 @@ get_executable_script() {
   fi
 }
 
-execute_segment_script() {
-  local segment=$1
-  local segment_direction=$2
-  local segment_max_length=$3
-  local segment_script="$(get_executable_script 'segment' "$segment")"
-
-  if [[ -n "$segment_script" ]]; then
-    source "$segment_script"
-    "segment_generate_${segment}" "$command_exit_code" "$command_time" "$segment_direction" "$segment_max_length"
-  fi
-}
-
 execute_prompt_hooks() {
   for hook in "${settings_hooks[@]}"; do
     local hook_script="$(get_executable_script 'hook' "$hook")"
@@ -92,7 +80,7 @@ generate_prompt() {
       pid_two["$i"]="$i"
     fi
 
-    execute_segment_script "$segment_name" "$seperator_direction" "$segment_max_length" > "${tempdir}/${i}" & pids[i]=$!
+    generate_segment "$segment_name" "$seperator_direction" "$segment_max_length" > "${tempdir}/${i}" & pids[i]=$!
 
   done
 
@@ -107,9 +95,11 @@ generate_prompt() {
 
   for i in "${!pids[@]}"; do
     wait "${pids[i]}"
-    segment_length=$?
-    segment=$(<"$tempdir/$i")
+    segment_output=$(<"$tempdir/$i")
+    segment=${segment_output##*;;}
+    segment_length=${segment_output%;;*}
     empty_space=$(( total_empty_space - segment_length ))
+
     if [[ -n "${pid_left["$i"]}"  && "$empty_space" -gt 0 ]]; then
       prompt_left="${prompt_left}${segment}"
       total_empty_space="$empty_space"
@@ -128,7 +118,8 @@ generate_prompt() {
     prompt_uncolored=1
   fi
   padding=$(printf "%*s" "$prompt_uncolored")
-  prompt_filler="$(pretty_print_segment "" "" "$padding" "right")"
+  prompt_filler_output="$(print_themed_segment "" "" "$padding" "right")"
+  prompt_filler=${prompt_filler_output##*;;}
 
 
   if [[ "${settings_prompt_ready_newline}" -eq 1 ]]; then
