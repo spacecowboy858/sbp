@@ -30,10 +30,6 @@ print_bg_color() {
   local bg_code=$1
   local escaped=$2
 
-  if [[ "$settings_segment_enable_bg_color" -eq 0 ]]; then
-    return 0
-  fi
-
   if [[ -z "$bg_code" ]]; then
     bg_escaped="\e[49m"
   elif [[ -z "${bg_code//[0123456789]}" ]]; then
@@ -93,7 +89,7 @@ pretty_print_splitter() {
 
 generate_segment() {
   local segment=$1
-  local segment_direction=$2
+  local segment_position=$2
   local segment_max_length=$3
   local segment_script="$(get_executable_script 'segment' "$segment")"
 
@@ -101,14 +97,13 @@ generate_segment() {
     source "$segment_script"
 
     segment_splitter="$settings_segment_splitter_right"
-    if [[ "$segment_direction" == 'left' ]]; then
-      segment_seperator=""
-      segment_splitter="$settings_segment_splitter_right"
+    if [[ "$segment_position" == 'left' ]]; then
+      segment_splitter="$settings_segment_splitter_left"
     fi
 
-    segment_result=" $("segment_generate_${segment}" "$command_exit_code" "$command_time" "$segment_max_length") "
-    segment_length=${#segment_result}
+    segment_result="$("segment_generate_${segment}" "$command_exit_code" "$command_time" "$segment_max_length")"
     segment_exit_code=$?
+    segment_length=${#segment_result}
     [[ "$segment_exit_code" -eq 1 || -z "${segment_result// /}" ]] && return 1
 
     primary_color_var="settings_${segment}_color_primary"
@@ -116,14 +111,13 @@ generate_segment() {
 
     if [[ "$segment_exit_code" -eq 3 ]]; then
       primary_color_var="${primary_color_var}_highlight"
-      secondary_color_var="${fg_color_var}_highlight"
+      secondary_color_var="${secondary_color_var}_highlight"
     fi
-
 
     primary_color="${!primary_color_var}"
     secondary_color="${!secondary_color_var}"
 
-    print_themed_segment "$primary_color" "$secondary_color" "$segment_result" "$segment_direction" "$segment_length"
+    print_themed_segment "$primary_color" "$secondary_color" "$segment_result" "$segment_position" "$segment_length"
   fi
 }
 

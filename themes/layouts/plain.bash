@@ -21,10 +21,12 @@ print_themed_segment() {
   local primary_color=$1
   local secondary_color=$2
   local segment_value=$3
-  local direction=$4
   local segment_length=$5
 
-  [[ -z "$segment_value" ]] && return 0
+  if [[ -n "${segment_value// /}" ]]; then
+    segment_length=$(( segment_length + 2 ))
+    segment_value=" ${segment_value} "
+  fi
 
   secondary_color="$primary_color"
   primary_color=""

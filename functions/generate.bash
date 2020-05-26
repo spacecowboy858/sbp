@@ -76,7 +76,7 @@ generate_prompt() {
       seperator_direction='left'
       pid_right["$i"]="$i"
     elif [[ "$i" -gt "$prompt_right_end" && -z "$pid_two" ]]; then
-      seperator_direction=''
+      seperator_direction='line2'
       pid_two["$i"]="$i"
     fi
 
