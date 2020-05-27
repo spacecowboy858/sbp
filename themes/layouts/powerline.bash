@@ -1,10 +1,10 @@
 settings_segment_separator_right=''
 settings_segment_separator_left=''
-settings_segment_splitter_left=''
-settings_segment_splitter_right=''
+settings_segment_splitter_left='  '
+settings_segment_splitter_right='  '
 settings_prompt_prefix_upper=''
 settings_prompt_prefix_lower=''
-settings_git_icon=''
+settings_git_icon='  '
 
 print_themed_segment() {
   local primary_color=$1

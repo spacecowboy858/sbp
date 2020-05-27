@@ -14,8 +14,7 @@ settings_timestamp_format="%H:%M:%S"
 settings_openshift_default_user="$USER"
 settings_rescuetime_refresh_rate=600
 settings_segment_enable_bg_color=0
-
-
+settings_git_icon=' '
 
 print_themed_segment() {
   local primary_color=$1

@@ -120,17 +120,3 @@ generate_segment() {
     print_themed_segment "$primary_color" "$secondary_color" "$segment_result" "$segment_position" "$segment_length"
   fi
 }
-
-pretty_print_seperator() {
-  local to_color=$1
-  local direction=$2
-
-  case $direction in
-    right)
-      printf '%s' "$(print_bg_color "$to_color")${settings_segment_separator_right}"
-    ;;
-    left)
-      printf '%s' "$(print_fg_color "$to_color")${settings_segment_separator_left}"
-      ;;
-  esac
-}

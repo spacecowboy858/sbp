@@ -7,8 +7,6 @@ source "${sbp_path}/functions/configure.bash"
 
 load_config
 
-color_reset='\[\e[00m\]'
-
 get_executable_script() {
   local type=$1
   local feature=$2
@@ -32,8 +30,9 @@ get_executable_script() {
 }
 
 execute_prompt_hooks() {
+  local hook_script
   for hook in "${settings_hooks[@]}"; do
-    local hook_script="$(get_executable_script 'hook' "$hook")"
+    hook_script="$(get_executable_script 'hook' "$hook")"
 
     if [[ -n "$hook_script" ]]; then
       (source "$hook_script" && nohup hook_execute_"$hook" "$command_exit_code" "$command_time" &>/dev/null &)

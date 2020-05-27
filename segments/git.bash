@@ -52,8 +52,8 @@ segment_generate_git() {
         upstream_data="${branch_line#* }"
         upstream_stripped="${upstream_data//[\[|\]]}"
         if [[ "$upstream_data" != "$upstream_stripped" ]]; then
-          outgoing_filled="${upstream_stripped/ahead /${outgoing_icon}}"
-          upstream_status="${outgoing_filled/behind /${incoming_icon}}"
+          outgoing_filled="${upstream_stripped/ahead / ${outgoing_icon}}"
+          upstream_status="${outgoing_filled/behind / ${incoming_icon}}"
         fi
     esac
   done <<< "$git_status"
@@ -78,7 +78,7 @@ segment_generate_git() {
     fi
   fi
 
-  segment_value="${git_state} ${settings_git_icon} ${git_head} ${upstream_status}"
+  segment_value="${git_state/ /}${settings_git_icon}${git_head}${upstream_status}"
 
-  printf '%s' "${segment_value//  / }"
+  printf '%s' "$segment_value"
 }

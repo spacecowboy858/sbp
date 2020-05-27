@@ -17,7 +17,7 @@ segment_generate_path() {
     for i in "${!wdir_array[@]}"; do
       dir=${wdir_array["$i"]}
       if [[ -n "$dir" ]]; then
-        segment_value=" ${dir} "
+        segment_value="${dir}"
         [[ "$(( i + 1 ))" -eq "${#wdir_array[@]}" ]] && unset segment_splitter
         path_value="${path_value}${segment_value}${segment_splitter}"
       fi
