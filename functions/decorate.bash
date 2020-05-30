@@ -20,15 +20,20 @@ get_complement_rgb() {
 }
 
 print_colors() { # prints ansi escape codes for fg and bg (optional)
-  local fg_code=$1
-  local bg_code=$2
+  local -n return_value=$1
+  local fg_code=$2
+  local bg_code=$3
+  local fg_color bg_color
 
-  printf '%s%s' "$(print_fg_color "$fg_code")" "$(print_bg_color "$bg_code")"
+  print_fg_color 'fg_color' "$fg_code"
+  print_bg_color 'bg_color' "$bg_code"
+  return_value="${fg_color}${bg_color}"
 }
 
 print_bg_color() {
-  local bg_code=$1
-  local escaped=$2
+  local -n return_value=$1
+  local bg_code=$2
+  local escaped=$3
 
   if [[ -z "$bg_code" ]]; then
     bg_escaped="\e[49m"
@@ -39,15 +44,16 @@ print_bg_color() {
   fi
 
   if [[ -z "$escaped" ]]; then
-    printf '\[%s\]' "${bg_escaped}"
+    return_value="\[${bg_escaped}\]"
   else
-    printf '%s' "${bg_escaped}"
+    return_value="${bg_escaped}"
   fi
 }
 
 print_fg_color() {
-  local fg_code=$1
-  local escaped=$2
+  local -n return_value=$1
+  local fg_code=$2
+  local escaped=$3
 
   if [[ -z "$fg_code" ]]; then
     fg_escaped="\e[39m"
@@ -58,9 +64,9 @@ print_fg_color() {
   fi
 
   if [[ -z "$escaped" ]]; then
-    printf '\[%s\]' "${fg_escaped}"
+    return_value="\[${fg_escaped}\]"
   else
-    printf '%s' "${fg_escaped}"
+    return_value="${fg_escaped}"
   fi
 }
 
@@ -82,41 +88,50 @@ pretty_print_splitter() {
     segment_color="$secondary_color"
   fi
 
-  splitter_on_color=$(print_fg_color "$splitter_color")
-  splitter_off_color=$(print_fg_color "$segment_color")
-  printf '%s' "${splitter_on_color}${splitter_character}${splitter_off_color}"
+  local splitter_on_color
+  print_fg_color 'splitter_on_color' "$splitter_color"
+  local splitter_off_color
+  print_fg_color 'splitter_off_color' "$segment_color"
+  return_value="${splitter_on_color}${splitter_character}${splitter_off_color}"
 }
+
+submit_segment() {
+  print_themed_segment "$@"
+  mode=$1
+  shift
+  segments=$@ # add to a ; seperated list. 
+  echo "$@"
+  return 0
+}
+
 
 generate_segment() {
   local segment=$1
   local segment_position=$2
   local segment_max_length=$3
-  local segment_script="$(get_executable_script 'segment' "$segment")"
+  local segment_script
+  get_executable_script 'segment_script' 'segment' "$segment"
 
   if [[ -n "$segment_script" ]]; then
     source "$segment_script"
 
-    segment_splitter="$settings_segment_splitter_right"
-    if [[ "$segment_position" == 'left' ]]; then
-      segment_splitter="$settings_segment_splitter_left"
-    fi
-
-    segment_result="$("segment_generate_${segment}" "$command_exit_code" "$command_time" "$segment_max_length")"
-    segment_exit_code=$?
-    segment_length=${#segment_result}
-    [[ "$segment_exit_code" -eq 1 || -z "${segment_result// /}" ]] && return 1
-
     primary_color_var="settings_${segment}_color_primary"
     secondary_color_var="settings_${segment}_color_secondary"
 
-    if [[ "$segment_exit_code" -eq 3 ]]; then
-      primary_color_var="${primary_color_var}_highlight"
-      secondary_color_var="${secondary_color_var}_highlight"
-    fi
+    primary_color_highlight_var="${primary_color_var}_highlight"
+    secondary_color_highlight_var="${secondary_color_var}_highlight"
 
     primary_color="${!primary_color_var}"
     secondary_color="${!secondary_color_var}"
 
-    print_themed_segment "$primary_color" "$secondary_color" "$segment_result" "$segment_position" "$segment_length"
+    export primary_color_highlight="${!primary_color_highlight_var}"
+    export secondary_color_highlight="${!secondary_color_highlight_var}"
+
+    splitter_color_var="settings_${segment}_splitter_color"
+    export splitter_color="${!splitter_color_var}"
+
+
+    "segment_generate_${segment}" "$command_exit_code" "$command_time" "$segment_max_length"
+
   fi
 }

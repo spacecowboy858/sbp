@@ -80,5 +80,5 @@ segment_generate_git() {
 
   segment_value="${git_state/ /}${settings_git_icon}${git_head}${upstream_status}"
 
-  printf '%s' "$segment_value"
+  print_themed_segment 'normal' "$segment_value"
 }

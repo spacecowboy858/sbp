@@ -7,7 +7,6 @@ segment_generate_exit_code() {
   fi
 
   if [[ "$return_code" -ne 0 && "$return_code" -ne 130 ]]; then
-    printf '%s' "$return_code"
-    return 3
+    print_themed_segment 'normal' "$return_code"
   fi
 }

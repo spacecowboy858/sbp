@@ -11,6 +11,6 @@ segment_generate_rescuetime() {
     exit 0
   fi
 
-  printf '%s' "${pulse} ${segment_splitter} ${time}"
+  print_themed_segment 'normal' "$pulse" "$time"
 
 }

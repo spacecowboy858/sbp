@@ -17,9 +17,11 @@ segment_generate_command() {
 
   command_value="last: ${timer_m}m ${timer_s}s"
 
-  printf '%s' "$command_color_primary" "$command_color_secondary" "$command_value"
 
   if [[ "$command_exit_code" -gt 0 && "$command_exit_code" -ne 130 ]]; then
-    return 3
+    print_themed_segment 'normal' "$command_value"
+  else
+    print_themed_segment 'highlight' "$command_value"
   fi
+
 }

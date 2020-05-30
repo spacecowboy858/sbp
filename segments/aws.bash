@@ -2,6 +2,6 @@
 
 segment_generate_aws() {
   if [[ -n "$AWS_DEFAULT_PROFILE" ]]; then
-    printf '%s' "$AWS_DEFAULT_PROFILE"
+    print_themed_segment 'normal' "$AWS_DEFAULT_PROFILE"
   fi
 }

@@ -1,6 +1,5 @@
 #! /usr/bin/env bash
 segment_generate_openshift() {
-  segment_direction=$3
   if grep -q token "${HOME}/.kube/config" &>/dev/null; then
     config="$(sed -n 's|current-context: \(.*\)/\(.*\)/\(.*\)$|\1;\2;\3|p' "${HOME}/.kube/config")"
     project="$(cut -d ';' -f 1 <<<"$config")"
@@ -17,6 +16,6 @@ segment_generate_openshift() {
       segment="${user}@${cluster}:${project}"
     fi
 
-    pretty_printf '%s' "$settings_openshift_color_primary" "$settings_openshift_color_secondary" " ${segment} " "$segment_direction"
+    print_themed_segment 'normal' "$segment"
   fi
 }

@@ -15,6 +15,6 @@ segment_generate_python_env() {
   fi
 
   if [[ -n "$segment_value" ]]; then
-    printf '%s' "$segment_value"
+    print_themed_segment 'normal' "$segment_value"
   fi
 }

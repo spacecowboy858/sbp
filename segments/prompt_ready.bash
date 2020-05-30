@@ -5,6 +5,6 @@ segment_generate_prompt_ready() {
     return 0
   fi
 
-  printf '%s' "$settings_prompt_ready_icon"
+  print_themed_segment 'normal' "$settings_prompt_ready_icon"
 
 }

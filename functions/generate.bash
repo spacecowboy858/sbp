@@ -8,8 +8,9 @@ source "${sbp_path}/functions/configure.bash"
 load_config
 
 get_executable_script() {
-  local type=$1
-  local feature=$2
+  local -n return_value=$1
+  local type=$2
+  local feature=$3
 
   if [[ -f "${config_folder}/peekaboo/${segment_name}" ]]; then
     return 0
@@ -19,9 +20,9 @@ get_executable_script() {
   local global_script="${sbp_path}/${type}s/${feature}.bash"
 
   if [[ -x "$local_script" ]]; then
-    printf '%s' "$local_script"
+    return_value="$local_script"
   elif [[ -x "$global_script" ]]; then
-    printf '%s' "$global_script"
+    return_value="$global_script"
   else
     log_error "Could not find $local_script"
     log_error "Could not find $global_script"
@@ -32,7 +33,7 @@ get_executable_script() {
 execute_prompt_hooks() {
   local hook_script
   for hook in "${settings_hooks[@]}"; do
-    hook_script="$(get_executable_script 'hook' "$hook")"
+    get_executable_script 'hook_script' 'hook' "$hook"
 
     if [[ -n "$hook_script" ]]; then
       (source "$hook_script" && nohup hook_execute_"$hook" "$command_exit_code" "$command_time" &>/dev/null &)
@@ -87,8 +88,9 @@ generate_prompt() {
   total_empty_space="$columns"
 
   if [[ -n "${settings_prompt_prefix_upper}" ]]; then
+    local prefix_color
     total_empty_space=$(( total_empty_space - ${#settings_prompt_prefix_upper} - 1 ))
-    prefix_color="$(print_fg_color "$settings_prompt_ready_color_primary")"
+    print_fg_color 'prefix_color' "$settings_prompt_ready_color_primary"
     prompt_left="${prompt_left} ${prefix_color}${settings_prompt_prefix_upper}"
   fi
 
