@@ -49,7 +49,7 @@ generate_prompt() {
   execute_prompt_hooks
 
   local prompt_left="\n"
-  local prompt_filler prompt_right prompt_ready seperator_direction base_dir
+  local prompt_filler prompt_right prompt_ready segment_position base_dir
   local prompt_left_end=$(( ${#settings_segments_left[@]} - 1 ))
   local prompt_right_end=$(( ${#settings_segments_right[@]} + prompt_left_end ))
   local prompt_segments=("${settings_segments_left[@]}" "${settings_segments_right[@]}" 'prompt_ready')
@@ -67,20 +67,20 @@ generate_prompt() {
     segment_name="${prompt_segments[i]}"
     [[ -z "$segment_name" ]] && continue
     if [[ "$i" -eq 0 ]]; then
-      seperator_direction=''
+      segment_position=''
       pid_left["$i"]="$i"
     elif [[ "$i" -le "$prompt_left_end" ]]; then
-      seperator_direction='right'
+      segment_position='right'
       pid_left["$i"]="$i"
     elif [[ "$i" -le "$prompt_right_end" ]]; then
-      seperator_direction='left'
+      segment_position='left'
       pid_right["$i"]="$i"
     elif [[ "$i" -gt "$prompt_right_end" && -z "$pid_two" ]]; then
-      seperator_direction='line2'
+      segment_position='line2'
       pid_two["$i"]="$i"
     fi
 
-    generate_segment "$segment_name" "$seperator_direction" "$segment_max_length" > "${tempdir}/${i}" & pids[i]=$!
+    generate_segment "$segment_name" "$segment_position" "$segment_max_length" > "${tempdir}/${i}" & pids[i]=$!
 
   done
 
@@ -119,7 +119,8 @@ generate_prompt() {
     prompt_uncolored=1
   fi
   padding=$(printf "%*s" "$prompt_uncolored")
-  prompt_filler_output="$(print_themed_segment "" "" "$padding" "right")"
+  segment_position='right'
+  prompt_filler_output="$(print_themed_segment 'normal' "$padding")"
   prompt_filler=${prompt_filler_output##*;;}
 
 

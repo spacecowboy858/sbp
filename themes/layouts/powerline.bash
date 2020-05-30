@@ -12,19 +12,21 @@ print_themed_segment() {
   shift
   local part_length
   local themed_segment
+  local seperator_themed
+  local part_splitter
 
   if [[ "$segment_position" == 'left' ]]; then
     part_splitter="$settings_segment_splitter_left"
     seperator="$settings_segment_separator_left"
-    local seperator_themed
-    print_fg_color 'seperator_themed' "$primary_color"
-    seperator_themed="${seperator_themed}${seperator}"
-  else
+    local seperator_color
+    print_fg_color 'seperator_color' "$primary_color"
+    seperator_themed="${seperator_color}${seperator}"
+  elif [[ "$segment_position" == 'right' ]]; then
     part_splitter="$settings_segment_splitter_right"
     seperator="$settings_segment_separator_right"
-    local seperator_themed
-    print_bg_color 'seperator_themed' "$primary_color"
-    seperator_themed="${seperator_themed}${seperator}"
+    local seperator_color
+    print_bg_color 'seperator_color' "$primary_color"
+    seperator_themed="${seperator_color}${seperator}"
   fi
 
   local part_splitter_on
@@ -47,9 +49,10 @@ print_themed_segment() {
     fi
   done
 
-  if [[ -n "${segment_value// /}" ]]; then
+
+  if [[ -n "${themed_segment// /}" ]]; then
     segment_length=$(( segment_length + 2 ))
-    segment_value=" ${segment_value} "
+    themed_segment=" ${themed_segment} "
   fi
 
 
@@ -58,6 +61,6 @@ print_themed_segment() {
   segment_length=$(( segment_length + seperator_length ))
   local themed_segment_colors
   print_colors 'themed_segment_colors' "$secondary_color" "$primary_color"
-  themed_segment="${seperator}${themed_segment_colors}${themed_segment}${prepare_color}"
+  themed_segment="${seperator_themed}${themed_segment_colors}${themed_segment}${prepare_color}"
   printf '%s;;%s' "$segment_length" "$themed_segment"
 }
