@@ -4,6 +4,9 @@
 source "${sbp_path}/functions/decorate.bash"
 # shellcheck source=functions/configure.bash
 source "${sbp_path}/functions/configure.bash"
+# shellcheck source=functions/execute.bash
+source "${sbp_path}/functions/execute.bash"
+
 
 load_config
 
@@ -46,7 +49,7 @@ list_segments() {
     fi
 
     _sbp_timer_start
-    (source "$segment" && segment_generate_${segment_name} 0 0 left 0 &>/dev/null)
+    (generate_segment "$segment")
     duration=$(_sbp_timer_tick 2>&1 | tr -d ':')
 
     echo "${segment_name}: ${status}" "$duration"
@@ -111,7 +114,7 @@ list_words() {
 show_status() {
   read -r -d '' splash <<'EOF'
 
-' _____________________________
+- _____________________________
  /   _____/\______   \______   \
  \_____  \  |    |  _/|     ___/
  /        \ |    |   \|    |

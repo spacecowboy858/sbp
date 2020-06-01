@@ -5,11 +5,8 @@
 #################################
 
 export sbp_path
-# shellcheck source=functions/log.bash
-source "${sbp_path}/functions/log.bash"
 # shellcheck source=functions/interact.bash
 source "${sbp_path}/functions/interact.bash"
-
 
 if [[ -d "/run/user/${UID}" ]]; then
   _sbp_cache=$(mktemp -d --tmpdir="/run/user/${UID}") && trap 'rm -rf "$tempdir"' EXIT;
@@ -64,7 +61,7 @@ _sbp_set_prompt() {
   fi
   printf '\e]2;%s\007' "$title"
 
-  PS1=$(bash "${sbp_path}/functions/generate.bash" "$COLUMNS" "$command_status" "$command_duration")
+  PS1=$(bash "${sbp_path}/functions/main.bash" "$COLUMNS" "$command_status" "$command_duration")
   [[ -n "$SBP_DEBUG" ]] && _sbp_timer_tick "Done"
 
 }
