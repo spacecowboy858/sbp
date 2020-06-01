@@ -95,15 +95,6 @@ pretty_print_splitter() {
   return_value="${splitter_on_color}${splitter_character}${splitter_off_color}"
 }
 
-submit_segment() {
-  print_themed_segment "$@"
-  mode=$1
-  shift
-  segments=$@ # add to a ; seperated list. 
-  echo "$@"
-  return 0
-}
-
 
 generate_segment() {
   local segment=$1

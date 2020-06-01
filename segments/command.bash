@@ -19,9 +19,9 @@ segment_generate_command() {
 
 
   if [[ "$command_exit_code" -gt 0 && "$command_exit_code" -ne 130 ]]; then
-    print_themed_segment 'normal' "$command_value"
-  else
     print_themed_segment 'highlight' "$command_value"
+  else
+    print_themed_segment 'normal' "$command_value"
   fi
 
 }
