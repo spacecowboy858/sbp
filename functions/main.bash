@@ -1,46 +1,27 @@
 #! /usr/bin/env bash
 
 # shellcheck source=functions/decorate.bash
-source "${sbp_path}/functions/decorate.bash"
+source "${SBP_PATH}/functions/decorate.bash"
 # shellcheck source=functions/configure.bash
-source "${sbp_path}/functions/configure.bash"
+source "${SBP_PATH}/functions/configure.bash"
 # shellcheck source=functions/execute.bash
-source "${sbp_path}/functions/execute.bash"
+source "${SBP_PATH}/functions/execute.bash"
 # shellcheck source=functions/log.bash
-source "${sbp_path}/functions/log.bash"
+source "${SBP_PATH}/functions/log.bash"
 
-load_config
+configure::load_config
 
-COLUMNS=$1
-COMMAND_EXIT_CODE=$2
-COMMAND_DURATION=$3
+COMMAND_EXIT_CODE=$1
+COMMAND_DURATION=$2
 
-generate_prompt() {
-  execute_prompt_hooks
-
-  # Start generating segments
-  # If special case is found, set state (filler, newline, prompt)
-  #
-  # If we've found a filler insert it
-
-  local prompt_left="\n"
-  local prompt_filler prompt_right prompt_ready segment_position
-  local prompt_left_end=$(( ${#settings_segments_left[@]} - 1 ))
-  local prompt_right_end=$(( ${#settings_segments_right[@]} + prompt_left_end ))
-  local prompt_segments=("${settings_segments_left[@]}" "${settings_segments_right[@]}" 'prompt_ready')
-  local number_of_top_segments=$(( ${#settings_segments_left[@]} + ${#settings_segments_right[@]} - 1))
-  local segment_max_length=$(( COLUMNS / number_of_top_segments ))
+main::main() {
+  execute::execute_prompt_hooks
 
   local settings_segments_new=('newline' ${settings_segments_left[@]} 'filler' ${settings_segments_right[@]} 'newline' 'prompt_ready')
 
-  declare -A pid_left
-  declare -A pid_right
-  declare -A pid_two
-
   # Concurrent evaluation of promt segments
-  tempdir=$_sbp_cache
+  tempdir=$_SBP_CACHE
 
-  declare -a segment_list
   declare -a fillers
   declare -a newlines
 
@@ -63,13 +44,12 @@ generate_prompt() {
         pids[i]=0
         ;;
       *)
-        generate_segment "$segment_name" "$segment_position" "$segment_max_length" "$(( i - last_newline ))" > "${tempdir}/${i}" & pids[i]=$!
+        execute::execute_prompt_segment "$segment_name" "$segment_position" "$(( i - last_newline ))" > "${tempdir}/${i}" & pids[i]=$!
         ;;
     esac
   done
 
-  total_empty_space="$COLUMNS"
-  declare -a completed_segments
+  local total_empty_space="$COLUMNS"
   local pre_filler=
   local post_filler=
 
@@ -103,7 +83,6 @@ generate_prompt() {
           pre_filler="${pre_filler}${segment}"
         fi
         total_empty_space="$empty_space"
-        filler_space=
       fi
     fi
   done
@@ -114,4 +93,4 @@ generate_prompt() {
   printf '%s' "$prompt"
 }
 
-generate_prompt
+main::main

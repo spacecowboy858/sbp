@@ -1,7 +1,7 @@
 #! /usr/bin/env bash
 
 segment_generate_git() {
-  local segment_max_length=$3
+  local segment_max_length=$settings_git_max_length
 
   local incoming_icon="$settings_git_incoming_icon"
   local outgoing_icon="$settings_git_outgoing_icon"

@@ -36,18 +36,18 @@ print_themed_segment() {
     part_splitter=" $settings_segment_splitter_left "
     seperator="$settings_segment_separator_left"
     local seperator_color
-    print_bg_color 'seperator_color' "$PRIMARY_COLOR"
+    decorate::print_bg_color 'seperator_color' "$PRIMARY_COLOR"
     seperator_themed="${seperator_color}${seperator}"
   elif [[ "$SEGMENT_POSITION" == 'right' ]]; then
     part_splitter=" $settings_segment_splitter_right "
     seperator="$settings_segment_separator_right"
     local seperator_color
-    print_fg_color 'seperator_color' "$PRIMARY_COLOR"
+    decorate::print_fg_color 'seperator_color' "$PRIMARY_COLOR"
     seperator_themed="${seperator_color}${seperator}"
   fi
 
   local segment_colors
-  print_colors 'segment_colors' "$SECONDARY_COLOR" "$PRIMARY_COLOR"
+  decorate::print_colors 'segment_colors' "$SECONDARY_COLOR" "$PRIMARY_COLOR"
 
 
   local part_splitter_length="${#part_splitter}"
@@ -61,9 +61,9 @@ print_themed_segment() {
 
   if [[ "${#@}" -gt 1 ]]; then
     local splitter_color_on
-    print_fg_color 'splitter_color_on' "$SPLITTER_COLOR"
+    decorate::print_fg_color 'splitter_color_on' "$SPLITTER_COLOR"
     local local splitter_color_off
-    print_fg_color 'splitter_color_off' "$SECONDARY_COLOR"
+    decorate::print_fg_color 'splitter_color_off' "$SECONDARY_COLOR"
     part_splitter_themed="${splitter_color_on}${part_splitter}${splitter_color_off}"
   fi
 
@@ -85,7 +85,7 @@ print_themed_segment() {
   segment_length=$(( segment_length + 2 ))
 
   local prepare_color=
-  print_colors 'prepare_color' "$PRIMARY_COLOR" "$PRIMARY_COLOR"
+  decorate::print_colors 'prepare_color' "$PRIMARY_COLOR" "$PRIMARY_COLOR"
   themed_segment="${themed_segment_colors}${themed_segment}${prepare_color}"
   printf '%s;;%s' "$segment_length" "$themed_segment"
 }

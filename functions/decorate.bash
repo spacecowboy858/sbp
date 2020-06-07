@@ -2,7 +2,7 @@
 
 export colors_ids=( 00 01 02 03 04 05 06 07 08 09 0A 0B 0C 0D 0E 0F )
 
-get_complement_rgb() {
+decorate::get_complement_rgb() {
   local -n return_value=$1
   local source_color=$2
   input_colors=()
@@ -21,18 +21,18 @@ get_complement_rgb() {
   fi
 }
 
-print_colors() { # prints ansi escape codes for fg and bg (optional)
+decorate::print_colors() { # prints ansi escape codes for fg and bg (optional)
   local -n return_value=$1
   local fg_code=$2
   local bg_code=$3
   local fg_color bg_color
 
-  print_fg_color 'fg_color' "$fg_code"
-  print_bg_color 'bg_color' "$bg_code"
+  decorate::print_fg_color 'fg_color' "$fg_code"
+  decorate::print_bg_color 'bg_color' "$bg_code"
   return_value="${fg_color}${bg_color}"
 }
 
-print_bg_color() {
+decorate::print_bg_color() {
   local -n return_value=$1
   local bg_code=$2
   local escaped=$3
@@ -52,7 +52,7 @@ print_bg_color() {
   fi
 }
 
-print_fg_color() {
+decorate::print_fg_color() {
   local -n return_value=$1
   local fg_code=$2
   local escaped=$3

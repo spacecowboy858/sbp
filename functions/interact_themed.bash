@@ -1,14 +1,14 @@
 #! /usr/bin/env bash
 
 # shellcheck source=functions/decorate.bash
-source "${sbp_path}/functions/decorate.bash"
+source "${SBP_PATH}/functions/decorate.bash"
 # shellcheck source=functions/configure.bash
-source "${sbp_path}/functions/configure.bash"
+source "${SBP_PATH}/functions/configure.bash"
 # shellcheck source=functions/execute.bash
-source "${sbp_path}/functions/execute.bash"
+source "${SBP_PATH}/functions/execute.bash"
 
 
-load_config
+configure::load_config
 
 generate_extra_options() {
   # TODO this should probably be rewritten to better check
@@ -36,7 +36,7 @@ EOF
 
 list_segments() {
   local active_segments=( "${settings_segments_left[@]}" "${settings_segments_right[@]}" )
-  for segment in $(list_feature_files 'segments'); do
+  for segment in $(configure::list_feature_files 'segments'); do
     local status='disabled'
     local segment_file="${segment##*/}"
     local segment_name="${segment_file/.bash/}"
@@ -49,7 +49,7 @@ list_segments() {
     fi
 
     _sbp_timer_start
-    (generate_segment "$segment")
+    (execute::execute_prompt_segment "$segment")
     duration=$(_sbp_timer_tick 2>&1 | tr -d ':')
 
     echo "${segment_name}: ${status}" "$duration"
@@ -57,7 +57,7 @@ list_segments() {
 }
 
 list_hooks() {
-  for hook in $(list_feature_files 'hooks'); do
+  for hook in $(configure::list_feature_files 'hooks'); do
     hook_file="${hook##*/}"
     hook_name="${hook_file/.bash/}"
     status='disabled'
@@ -73,7 +73,7 @@ list_hooks() {
 }
 
 list_layouts() {
-  for layout in $(list_feature_files 'themes/layouts'); do
+  for layout in $(configure::list_feature_files 'themes/layouts'); do
     file="${layout##*/}"
     printf '  %s\n' "${file/.bash/}"
   done
@@ -84,18 +84,18 @@ show_current_colors() {
   for n in "${colors_ids[@]}"; do
     color="color${n}"
     local text_color_value
-    get_complement_rgb 'text_color_value' "${!color}"
+    decorate::get_complement_rgb 'text_color_value' "${!color}"
     local text_color
-    print_fg_color 'text_color' "$text_color_value" 'false'
+    decorate::print_fg_color 'text_color' "$text_color_value" 'false'
     local bg_color
-    print_bg_color 'bg_color' "${!color}" 'false'
+    decorate::print_bg_color 'bg_color' "${!color}" 'false'
     printf '%b%b %b%b ' "$bg_color" "$text_color" " $n " "\e[00m"
   done
   printf '\n'
 }
 
 list_colors() {
-  for color in $(list_feature_files 'themes/colors'); do
+  for color in $(configure::list_feature_files 'themes/colors'); do
     source "$color"
     file="${color##*/}"
     printf '\n%s \n' "${file/.bash/}"
@@ -111,7 +111,7 @@ list_themes() {
 }
 
 list_words() {
-  list_feature_names "$1"
+  configure::list_feature_names "$1"
 }
 
 show_status() {

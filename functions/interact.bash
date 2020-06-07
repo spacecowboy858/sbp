@@ -1,4 +1,4 @@
-_sbp_themed_helper="${sbp_path}/functions/interact_themed.bash"
+_sbp_themed_helper="${SBP_PATH}/functions/interact_themed.bash"
 
 _sbp_print_usage() {
   cat << EOF
@@ -30,7 +30,7 @@ _sbp_require_argument() {
 
 _sbp_reload() {
   # shellcheck source=/dev/null
-  source "$sbp_path"/sbp.bash
+  source "$SBP_PATH"/sbp.bash
 }
 
 _sbp_edit_config() {
@@ -52,8 +52,8 @@ _sbp_toggle_debug() {
 
 _sbp_peekaboo() {
   local feature=$1
-  feature_hook="${sbp_path}/hooks/${feature}.bash"
-  feature_segment="${sbp_path}/segments/${feature}.bash"
+  feature_hook="${SBP_PATH}/hooks/${feature}.bash"
+  feature_segment="${SBP_PATH}/segments/${feature}.bash"
   peekaboo_folder="${HOME}/.config/sbp/peekaboo"
   mkdir -p "${peekaboo_folder}"
   peekaboo_file="${peekaboo_folder}/${feature}"

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-get_executable_script() {
+execute::get_script() {
   local -n return_value=$1
   local type=$2
   local feature=$3
@@ -10,23 +10,23 @@ get_executable_script() {
   fi
 
   local local_script="${config_folder}/${type}s/${feature}.bash"
-  local global_script="${sbp_path}/${type}s/${feature}.bash"
+  local global_script="${SBP_PATH}/${type}s/${feature}.bash"
 
   if [[ -x "$local_script" ]]; then
     return_value="$local_script"
   elif [[ -x "$global_script" ]]; then
     return_value="$global_script"
   else
-    log_error "Could not find $local_script"
-    log_error "Could not find $global_script"
-    log_error "Make sure it exists"
+    log::error "Could not find $local_script"
+    log::error "Could not find $global_script"
+    log::error "Make sure it exists"
   fi
 }
 
-execute_prompt_hooks() {
+execute::execute_prompt_hooks() {
   local hook_script
   for hook in "${settings_hooks[@]}"; do
-    get_executable_script 'hook_script' 'hook' "$hook"
+    execute::get_script 'hook_script' 'hook' "$hook"
 
     if [[ -n "$hook_script" ]]; then
       (source "$hook_script" && nohup hook_execute_"$hook" "$COMMAND_EXIT_CODE" "$COMMAND_DURATION" &>/dev/null &)
@@ -34,14 +34,13 @@ execute_prompt_hooks() {
   done
 }
 
-generate_segment() {
+execute::execute_prompt_segment() {
   local segment=$1
   local SEGMENT_POSITION=$2
-  local SEGMENT_MAX_LENGTH=$3
-  local SEGMENT_LINE_POSITION=$4
+  local SEGMENT_LINE_POSITION=$3
 
   local segment_script
-  get_executable_script 'segment_script' 'segment' "$segment"
+  execute::get_script 'segment_script' 'segment' "$segment"
 
   if [[ -n "$segment_script" ]]; then
     source "$segment_script"
@@ -61,7 +60,7 @@ generate_segment() {
     local splitter_color_var="settings_${segment}_splitter_color"
     SPLITTER_COLOR="${!splitter_color_var}"
 
-    "segment_generate_${segment}" "$COMMAND_EXIT_CODE" "$COMMAND_DURATION" "$SEGMENT_MAX_LENGTH"
+    "segment_generate_${segment}" "$COMMAND_EXIT_CODE" "$COMMAND_DURATION"
 
   fi
 
