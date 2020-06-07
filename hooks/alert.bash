@@ -1,6 +1,6 @@
 #! /usr/bin/env bash
 
-settings_alert_threshold="${settings_alert_hook:-60}"
+SETTINGS_ALERT_THRESHOLD="${SETTINGS_ALERT_THRESHOLD:-60}"
 
 function alert_exec() { # User notification
   [[ -z "$2" ]] && return
@@ -22,7 +22,7 @@ function hook_execute_alert {
   local command_time=$2
 
   [[ "$exit_code" -lt 0 ]] && return
-  if [[ "$settings_alert_threshold" -le "$command_time" ]]; then
+  if [[ "$SETTINGS_ALERT_THRESHOLD" -le "$command_time" ]]; then
     local title message
 
     if [[ "$exit_code" -eq "0" ]]; then

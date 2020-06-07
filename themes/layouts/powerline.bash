@@ -1,14 +1,14 @@
-settings_segment_separator_left=''
-settings_segment_separator_right=''
-settings_segment_splitter_left=''
-settings_segment_splitter_right=''
-settings_prompt_prefix_upper=''
-settings_prompt_prefix_lower=''
-settings_git_icon='  '
+SETTINGS_SEGMENT_SEPARATOR_LEFT=''
+SETTINGS_SEGMENT_SEPARATOR_RIGHT=''
+SETTINGS_SEGMENT_SPLITTER_LEFT=''
+SETTINGS_SEGMENT_SPLITTER_RIGHT=''
+SETTINGS_PROMPT_PREFIX_UPPER=''
+SETTINGS_PROMPT_PREFIX_LOWER=''
+SETTINGS_GIT_ICON='  '
 
 print_themed_filler() {
   local -n return_value=$1
-  local seperator_size=${#settings_segment_separator_left}
+  local seperator_size=${#SETTINGS_SEGMENT_SEPARATOR_LEFT}
   # Account for seperator and padding
   local filler_size=$(( $2 - seperator_size - 2 ))
   padding=$(printf "%*s" "$filler_size")
@@ -33,14 +33,14 @@ print_themed_segment() {
   fi
 
   if [[ "$SEGMENT_POSITION" == 'left' ]]; then
-    part_splitter=" $settings_segment_splitter_left "
-    seperator="$settings_segment_separator_left"
+    part_splitter=" $SETTINGS_SEGMENT_SPLITTER_LEFT "
+    seperator="$SETTINGS_SEGMENT_SEPARATOR_LEFT"
     local seperator_color
     decorate::print_bg_color 'seperator_color' "$PRIMARY_COLOR"
     seperator_themed="${seperator_color}${seperator}"
   elif [[ "$SEGMENT_POSITION" == 'right' ]]; then
-    part_splitter=" $settings_segment_splitter_right "
-    seperator="$settings_segment_separator_right"
+    part_splitter=" $SETTINGS_SEGMENT_SPLITTER_RIGHT "
+    seperator="$SETTINGS_SEGMENT_SEPARATOR_RIGHT"
     local seperator_color
     decorate::print_fg_color 'seperator_color' "$PRIMARY_COLOR"
     seperator_themed="${seperator_color}${seperator}"

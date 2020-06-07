@@ -6,8 +6,8 @@ segment_generate_openshift() {
     cluster="$(cut -d ';' -f 2 <<<"$config" | sed 's/:443//')"
     user="$(cut -d ';' -f 3 <<<"$config")"
 
-    if [[ "${user,,}" == "${settings_openshift_default_user,,}" ]]; then
-      if [[ "$settings_openshift_hide_cluster" -eq 1 ]]; then
+    if [[ "${user,,}" == "${SETTINGS_OPENSHIFT_DEFAULT_USER,,}" ]]; then
+      if [[ "$SETTINGS_OPENSHIFT_HIDE_CLUSTER" -eq 1 ]]; then
         segment="${project}"
       else
         segment="${cluster}:${project}"

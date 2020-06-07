@@ -25,7 +25,7 @@ execute::get_script() {
 
 execute::execute_prompt_hooks() {
   local hook_script
-  for hook in "${settings_hooks[@]}"; do
+  for hook in "${SETTINGS_HOOKS[@]}"; do
     execute::get_script 'hook_script' 'hook' "$hook"
 
     if [[ -n "$hook_script" ]]; then
@@ -45,11 +45,11 @@ execute::execute_prompt_segment() {
   if [[ -n "$segment_script" ]]; then
     source "$segment_script"
 
-    local primary_color_var="settings_${segment}_color_primary"
-    local secondary_color_var="settings_${segment}_color_secondary"
+    local primary_color_var="SETTINGS_${segment^^}_COLOR_PRIMARY"
+    local secondary_color_var="SETTINGS_${segment^^}_COLOR_SECONDARY"
 
-    local primary_color_highlight_var="${primary_color_var}_highlight"
-    local secondary_color_highlight_var="${secondary_color_var}_highlight"
+    local primary_color_highlight_var="${primary_color_var}_HIGHLIGHT"
+    local secondary_color_highlight_var="${secondary_color_var}_HIGHLIGHT"
 
     PRIMARY_COLOR="${!primary_color_var}"
     SECONDARY_COLOR="${!secondary_color_var}"
@@ -57,7 +57,7 @@ execute::execute_prompt_segment() {
     PRIMARY_COLOR_HIGHLIGHT="${!primary_color_highlight_var}"
     SECONDARY_COLOR_HIGHLIGHT="${!secondary_color_highlight_var}"
 
-    local splitter_color_var="settings_${segment}_splitter_color"
+    local splitter_color_var="SETTINGS_${segment}_SPLITTER_COLOR"
     SPLITTER_COLOR="${!splitter_color_var}"
 
     "segment_generate_${segment}" "$COMMAND_EXIT_CODE" "$COMMAND_DURATION"

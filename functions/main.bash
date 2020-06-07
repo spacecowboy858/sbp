@@ -26,8 +26,8 @@ main::main() {
   local segment_position='left'
   local last_newline=0
 
-  for i in "${!settings_segments[@]}"; do
-    segment_name="${settings_segments[i]}"
+  for i in "${!SETTINGS_SEGMENTS[@]}"; do
+    segment_name="${SETTINGS_SEGMENTS[i]}"
 
     case "$segment_name" in
       'newline')

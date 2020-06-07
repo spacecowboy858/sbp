@@ -96,8 +96,8 @@ configure::load_config() {
   set -a
   # shellcheck source=/dev/null
   source "$config_file"
-  configure::set_layout "${SBP_THEME_LAYOUT:-$settings_theme_layout}"
-  configure::set_colors "${SBP_THEME_COLOR:-$settings_theme_color}"
+  configure::set_layout "${SBP_THEME_LAYOUT:-$SETTINGS_THEME_LAYOUT}"
+  configure::set_colors "${SBP_THEME_COLOR:-$SETTINGS_THEME_COLOR}"
   # shellcheck source=/dev/null
   source "$colors_file"
   set +a

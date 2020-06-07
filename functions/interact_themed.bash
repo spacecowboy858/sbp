@@ -13,14 +13,14 @@ configure::load_config
 generate_extra_options() {
   # TODO this should probably be rewritten to better check
   # if we are messing with any previous settings
-  if [[ "$settings_prompt_ready_vi_mode" -eq 1 ]]; then
+  if [[ "$SETTINGS_PROMPT_READY_VI_MODE" -eq 1 ]]; then
     local cache_file="${cache_folder}/extra_options.bash"
     rm -f "$cache_file"
-    if [[ -n "$settings_prompt_ready_icon" ]]; then
-      local insert_color="$settings_prompt_ready_vi_insert_color"
-      local command_color="$settings_prompt_ready_vi_command_color"
-      local command_segment="\1\e[38;2;${command_color}m\e[49m\2 ${settings_prompt_ready_icon} \1\e[0m\2"
-      local insert_segment="\1\e[38;2;${insert_color}m\e[49m\2 ${settings_prompt_ready_icon} \1\e[0m\2"
+    if [[ -n "$SETTINGS_PROMPT_READY_ICON" ]]; then
+      local insert_color="$SETTINGS_PROMPT_READY_VI_INSERT_COLOR"
+      local command_color="$SETTINGS_PROMPT_READY_VI_COMMAND_COLOR"
+      local command_segment="\1\e[38;2;${command_color}m\e[49m\2 ${SETTINGS_PROMPT_READY_ICON} \1\e[0m\2"
+      local insert_segment="\1\e[38;2;${insert_color}m\e[49m\2 ${SETTINGS_PROMPT_READY_ICON} \1\e[0m\2"
     fi
     cat << EOF > "$cache_file"
 bind 'set show-mode-in-prompt on'
@@ -35,7 +35,7 @@ EOF
 }
 
 list_segments() {
-  local active_segments=( "${settings_segments_left[@]}" "${settings_segments_right[@]}" )
+  local active_segments=( "${SETTINGS_SEGMENTS_left[@]}" "${SETTINGS_SEGMENTS_right[@]}" )
   for segment in $(configure::list_feature_files 'segments'); do
     local status='disabled'
     local segment_file="${segment##*/}"
@@ -61,7 +61,7 @@ list_hooks() {
     hook_file="${hook##*/}"
     hook_name="${hook_file/.bash/}"
     status='disabled'
-    if printf '%s.bash\n' "${settings_hooks[@]}" | grep -qo "${hook_name}"; then
+    if printf '%s.bash\n' "${SETTINGS_HOOKS[@]}" | grep -qo "${hook_name}"; then
       if [[ -f "${config_folder}/peekaboo/${hook_name}" ]]; then
         status='paused'
       else
@@ -80,7 +80,7 @@ list_layouts() {
 }
 
 show_current_colors() {
-  settings_segment_enable_bg_color=1
+  SETTINGS_SEGMENT_ENABLE_BG_COLOR=1
   for n in "${colors_ids[@]}"; do
     color="color${n}"
     local text_color_value
@@ -125,8 +125,8 @@ show_status() {
         \/         \/
 EOF
   printf '%s\n' "${splash}"
-  printf '%s: %s\n' 'Color' "${SBP_THEME_COLOR:-$settings_theme_color}"
-  printf '%s: %s\n' 'Layout' "${SBP_THEME_LAYOUT:-$settings_theme_layout}"
+  printf '%s: %s\n' 'Color' "${SBP_THEME_COLOR:-$SETTINGS_THEME_COLOR}"
+  printf '%s: %s\n' 'Layout' "${SBP_THEME_LAYOUT:-$SETTINGS_THEME_LAYOUT}"
   printf '\n%s\n' "Current colors:"
   show_current_colors
 }

@@ -1,14 +1,14 @@
-settings_segment_separator_right='['
-settings_segment_separator_left=']'
-settings_segment_splitter_left='-'
-settings_segment_splitter_right='-'
-settings_prompt_prefix_upper='┍'
-settings_prompt_prefix_lower='└'
-settings_prompt_ready_icon="${settings_prompt_prefix_lower}${settings_prompt_ready_icon}"
-settings_segment_enable_bg_color=0
-settings_path_splitter_disable=1
-settings_prompt_ready_newline=1
-settings_git_icon=' '
+SETTINGS_SEGMENT_SEPARATOR_RIGHT='['
+SETTINGS_SEGMENT_SEPARATOR_LEFT=']'
+SETTINGS_SEGMENT_SPLITTER_LEFT='-'
+SETTINGS_SEGMENT_SPLITTER_RIGHT='-'
+SETTINGS_PROMPT_PREFIX_UPPER='┍'
+SETTINGS_PROMPT_PREFIX_LOWER='└'
+SETTINGS_PROMPT_READY_ICON="${SETTINGS_PROMPT_PREFIX_LOWER}${SETTINGS_PROMPT_READY_ICON}"
+SETTINGS_SEGMENT_ENABLE_BG_COLOR=0
+SETTINGS_PATH_SPLITTER_DISABLE=1
+SETTINGS_PROMPT_READY_NEWLINE=1
+SETTINGS_GIT_ICON=' '
 
 
 print_themed_segment() {
@@ -31,7 +31,7 @@ print_themed_segment() {
   if [[ -z "${segment_value// /}" || "$position" == 'line2' ]]; then
     full_output="${color}${segment_value}"
   else
-    full_output="${color}${settings_segment_separator_right}${segment_value}${settings_segment_separator_left}"
+    full_output="${color}${SETTINGS_SEGMENT_SEPARATOR_RIGHT}${segment_value}${SETTINGS_SEGMENT_SEPARATOR_LEFT}"
     segment_length=$(( segment_length + 2))
   fi
 

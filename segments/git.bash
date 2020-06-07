@@ -1,10 +1,10 @@
 #! /usr/bin/env bash
 
 segment_generate_git() {
-  local segment_max_length=$settings_git_max_length
+  local segment_max_length=$SETTINGS_GIT_MAX_LENGTH
 
-  local incoming_icon="$settings_git_incoming_icon"
-  local outgoing_icon="$settings_git_outgoing_icon"
+  local incoming_icon="$SETTINGS_GIT_INCOMING_ICON"
+  local outgoing_icon="$SETTINGS_GIT_OUTGOING_ICON"
 
   local path=${PWD}
   while [[ $path ]]; do
@@ -67,10 +67,10 @@ segment_generate_git() {
     git_head=$(git symbolic-ref --short HEAD 2>/dev/null || git rev-parse --short HEAD 2>/dev/null)
   fi
 
-  git_size=$(( ${#git_state} + ${#settings_git_icon} + ${#git_head} + ${#upstream_status} ))
+  git_size=$(( ${#git_state} + ${#SETTINGS_GIT_ICON} + ${#git_head} + ${#upstream_status} ))
 
   if [[ "$git_size" -gt "$segment_max_length" ]]; then
-    available_space=$(( segment_max_length - ${#git_state} - ${#settings_git_icon} + ${#upstream_status} ))
+    available_space=$(( segment_max_length - ${#git_state} - ${#SETTINGS_GIT_ICON} + ${#upstream_status} ))
     if [[ "$available_space" -gt 0 ]]; then
       git_head="${git_head:0:$available_space}.."
     else
@@ -78,7 +78,7 @@ segment_generate_git() {
     fi
   fi
 
-  segment_value="${git_state/ /}${settings_git_icon}${git_head}${upstream_status}"
+  segment_value="${git_state/ /}${SETTINGS_GIT_ICON}${git_head}${upstream_status}"
 
   print_themed_segment 'normal' "$segment_value"
 }
