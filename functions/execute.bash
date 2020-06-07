@@ -36,31 +36,32 @@ execute_prompt_hooks() {
 
 generate_segment() {
 local segment=$1
-local segment_position=$2
-local segment_max_length=$3
-local segment_script
+local SEGMENT_POSITION=$2
+local SEGMENT_MAX_LENGTH=$3
+local SEGMENT_LINE_POSITION=$4
 
+local segment_script
 get_executable_script 'segment_script' 'segment' "$segment"
 
 if [[ -n "$segment_script" ]]; then
   source "$segment_script"
 
-  primary_color_var="settings_${segment}_color_primary"
-  secondary_color_var="settings_${segment}_color_secondary"
+  local primary_color_var="settings_${segment}_color_primary"
+  local secondary_color_var="settings_${segment}_color_secondary"
 
-  primary_color_highlight_var="${primary_color_var}_highlight"
-  secondary_color_highlight_var="${secondary_color_var}_highlight"
+  local primary_color_highlight_var="${primary_color_var}_highlight"
+  local secondary_color_highlight_var="${secondary_color_var}_highlight"
 
-  primary_color="${!primary_color_var}"
-  secondary_color="${!secondary_color_var}"
+  PRIMARY_COLOR="${!primary_color_var}"
+  SECONDARY_COLOR="${!secondary_color_var}"
 
-  export primary_color_highlight="${!primary_color_highlight_var}"
-  export secondary_color_highlight="${!secondary_color_highlight_var}"
+  local primary_color_highlight="${!primary_color_highlight_var}"
+  SECONDARY_COLOR_HIGHLIGHT="${!secondary_color_highlight_var}"
 
-  splitter_color_var="settings_${segment}_splitter_color"
-  export splitter_color="${!splitter_color_var}"
+  local splitter_color_var="settings_${segment}_splitter_color"
+  SPLITTER_COLOR="${!splitter_color_var}"
 
-  "segment_generate_${segment}" "$COMMAND_EXIT_CODE" "$COMMAND_DURATION" "$segment_max_length"
+  "segment_generate_${segment}" "$COMMAND_EXIT_CODE" "$COMMAND_DURATION" "$SEGMENT_MAX_LENGTH"
 
 fi
 

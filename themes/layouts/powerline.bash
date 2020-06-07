@@ -1,71 +1,92 @@
-settings_segment_separator_right=''
-settings_segment_separator_left=''
-settings_segment_splitter_left=''
-settings_segment_splitter_right=''
+settings_segment_separator_left=''
+settings_segment_separator_right=''
+settings_segment_splitter_left=''
+settings_segment_splitter_right=''
 settings_prompt_prefix_upper=''
 settings_prompt_prefix_lower=''
 settings_git_icon='  '
 
+print_themed_filler() {
+  local -n return_value=$1
+  local seperator_size=${#settings_segment_separator_left}
+  # Account for seperator and padding
+  local filler_size=$(( $2 - seperator_size - 2 ))
+  padding=$(printf "%*s" "$filler_size")
+  SEGMENT_POSITION='left'
+  SEGMENT_LINE_POSITION=2
+  prompt_filler_output="$(print_themed_segment 'normal' "$padding")"
+  return_value=${prompt_filler_output##*;;}
+}
+
 print_themed_segment() {
   local color_type=$1
-  local segment_length=0
   shift
-  local part_length
+  local segment_length=0
+  local part_length=0
   local themed_segment
   local seperator_themed
   local part_splitter
 
   if [[ "$color_type" == 'highlight' ]]; then
-    primary_color="$primary_color_highlight"
-    secondary_color="$secondary_color_highlight"
+    PRIMARY_COLOR="$PRIMARY_COLOR_HIGHLIGHT"
+    SECONDARY_COLOR="$SECONDARY_COLOR_HIGHLIGHT"
   fi
 
-  if [[ "$segment_position" == 'left' ]]; then
+
+  if [[ "$SEGMENT_POSITION" == 'left' ]]; then
     part_splitter=" $settings_segment_splitter_left "
     seperator="$settings_segment_separator_left"
     local seperator_color
-    print_fg_color 'seperator_color' "$primary_color"
+    print_bg_color 'seperator_color' "$PRIMARY_COLOR"
     seperator_themed="${seperator_color}${seperator}"
-  elif [[ "$segment_position" == 'right' ]]; then
+  elif [[ "$SEGMENT_POSITION" == 'right' ]]; then
     part_splitter=" $settings_segment_splitter_right "
     seperator="$settings_segment_separator_right"
     local seperator_color
-    print_bg_color 'seperator_color' "$primary_color"
+    print_fg_color 'seperator_color' "$PRIMARY_COLOR"
     seperator_themed="${seperator_color}${seperator}"
   fi
 
-  local part_splitter_on
-  print_fg_color 'part_splitter_on' "$splitter_color"
-  local part_splitter_off
-  print_fg_color 'part_splitter_off' "$secondary_color"
-  local part_splitter_themed="${part_splitter_on}${part_splitter}${part_splitter_off}"
+  local segment_colors
+  print_colors 'segment_colors' "$SECONDARY_COLOR" "$PRIMARY_COLOR"
+
+
   local part_splitter_length="${#part_splitter}"
-  local seperator_length="${#seperator}"
+
+  if [[ "$SEGMENT_LINE_POSITION" -gt 1 ]]; then
+    segment_length="${#seperator}"
+    themed_segment="$seperator_themed"
+  fi
+
+  themed_segment="${themed_segment}${segment_colors}"
+
+  if [[ "${#@}" -gt 1 ]]; then
+    local splitter_color_on
+    print_fg_color 'splitter_color_on' "$SPLITTER_COLOR"
+    local local splitter_color_off
+    print_fg_color 'splitter_color_off' "$SECONDARY_COLOR"
+    part_splitter_themed="${splitter_color_on}${part_splitter}${splitter_color_off}"
+  fi
+
+  local themed_parts
 
   for part in "${@}"; do
     part_length="${#part}"
 
-    if [[ -n "$themed_segment" ]]; then
-      themed_segment="${themed_segment}${part_splitter}${part}"
+    if [[ -n "$themed_parts" ]]; then
+      themed_parts="${themed_parts}${part_splitter_themed}${part}"
       segment_length=$(( segment_length + part_length + part_splitter_length ))
     else
-      themed_segment="$part"
-      segment_length="$part_length"
+      segment_length="$(( segment_length + part_length))"
+      themed_parts="${part}"
     fi
   done
 
-
-  if [[ -n "${themed_segment// /}" ]]; then
-    segment_length=$(( segment_length + 2 ))
-    themed_segment=" ${themed_segment} "
-  fi
-
+  themed_segment="${themed_segment} ${themed_parts} "
+  segment_length=$(( segment_length + 2 ))
 
   local prepare_color=
-  print_fg_color 'prepare_color' "$primary_color"
-  segment_length=$(( segment_length + seperator_length ))
-  local themed_segment_colors
-  print_colors 'themed_segment_colors' "$secondary_color" "$primary_color"
-  themed_segment="${seperator_themed}${themed_segment_colors}${themed_segment}${prepare_color}"
+  print_colors 'prepare_color' "$PRIMARY_COLOR" "$PRIMARY_COLOR"
+  themed_segment="${themed_segment_colors}${themed_segment}${prepare_color}"
   printf '%s;;%s' "$segment_length" "$themed_segment"
 }
