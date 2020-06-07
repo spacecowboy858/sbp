@@ -32,7 +32,6 @@ print_themed_segment() {
     SECONDARY_COLOR="$SECONDARY_COLOR_HIGHLIGHT"
   fi
 
-
   if [[ "$SEGMENT_POSITION" == 'left' ]]; then
     part_splitter=" $settings_segment_splitter_left "
     seperator="$settings_segment_separator_left"

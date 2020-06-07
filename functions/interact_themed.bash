@@ -83,9 +83,12 @@ show_current_colors() {
   settings_segment_enable_bg_color=1
   for n in "${colors_ids[@]}"; do
     color="color${n}"
-    text_color_value=$(get_complement_rgb "${!color}")
-    text_color="$(print_fg_color "$text_color_value" 'false')"
-    bg_color="$(print_bg_color "${!color}" 'false')"
+    local text_color_value
+    get_complement_rgb 'text_color_value' "${!color}"
+    local text_color
+    print_fg_color 'text_color' "$text_color_value" 'false'
+    local bg_color
+    print_bg_color 'bg_color' "${!color}" 'false'
     printf '%b%b %b%b ' "$bg_color" "$text_color" " $n " "\e[00m"
   done
   printf '\n'
