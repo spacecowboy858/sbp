@@ -4,17 +4,18 @@
 #   Simple Bash Prompt (SBP)    #
 #################################
 
-export SBP_PATH
 # shellcheck source=functions/interact.bash
 source "${SBP_PATH}/functions/interact.bash"
 
 if [[ -d "/run/user/${UID}" ]]; then
-  _SBP_CACHE=$(mktemp -d --tmpdir="/run/user/${UID}") && trap 'rm -rf "$tempdir"' EXIT;
+  _SBP_CACHE=$(mktemp -d --tmpdir="/run/user/${UID}") && trap 'rm -rf "$_SBP_CACHE"' EXIT;
 else
-  _SBP_CACHE=$(mktemp -d) && trap 'rm -rf "$tempdir"' EXIT;
+  _SBP_CACHE=$(mktemp -d) && trap 'rm -rf "$_SBP_CACHE"' EXIT;
 fi
 
 export _SBP_CACHE
+export SBP_PATH
+export COLUMNS
 
 if [[ "$OSTYPE" == "darwin"* ]]; then
   export date_cmd='gdate'

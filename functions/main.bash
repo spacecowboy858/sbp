@@ -17,8 +17,6 @@ COMMAND_DURATION=$2
 main::main() {
   execute::execute_prompt_hooks
 
-  local settings_segments_new=('newline' ${settings_segments_left[@]} 'filler' ${settings_segments_right[@]} 'newline' 'prompt_ready')
-
   # Concurrent evaluation of promt segments
   tempdir=$_SBP_CACHE
 
@@ -28,8 +26,8 @@ main::main() {
   local segment_position='left'
   local last_newline=0
 
-  for i in "${!settings_segments_new[@]}"; do
-    segment_name="${settings_segments_new[i]}"
+  for i in "${!settings_segments[@]}"; do
+    segment_name="${settings_segments[i]}"
 
     case "$segment_name" in
       'newline')
