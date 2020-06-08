@@ -63,7 +63,7 @@ execute::execute_prompt_segment() {
     local splitter_color_var="SETTINGS_${segment}_SPLITTER_COLOR"
     SPLITTER_COLOR="${!splitter_color_var}"
 
-    "segment_generate_${segment}" "$COMMAND_EXIT_CODE" "$COMMAND_DURATION"
+    "segments::${segment}" "$COMMAND_EXIT_CODE" "$COMMAND_DURATION"
 
   fi
 

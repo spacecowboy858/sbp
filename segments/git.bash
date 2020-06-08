@@ -1,6 +1,6 @@
 #! /usr/bin/env bash
 
-segment_generate_git() {
+segments::git() {
   local segment_max_length=$SETTINGS_GIT_MAX_LENGTH
 
   local incoming_icon="$SETTINGS_GIT_INCOMING_ICON"

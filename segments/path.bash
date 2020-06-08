@@ -1,6 +1,6 @@
 #! /usr/bin/env bash
 
-segment_generate_path() {
+segments::path() {
   local segment_max_length=$4
 
   local wdir=${PWD/${HOME}/\~}

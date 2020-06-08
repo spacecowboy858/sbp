@@ -1,5 +1,5 @@
 #! /usr/bin/env bash
-segment_generate_openshift() {
+segments::openshift() {
   if grep -q token "${HOME}/.kube/config" &>/dev/null; then
     config="$(sed -n 's|current-context: \(.*\)/\(.*\)/\(.*\)$|\1;\2;\3|p' "${HOME}/.kube/config")"
     project="$(cut -d ';' -f 1 <<<"$config")"

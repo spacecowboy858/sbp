@@ -1,6 +1,6 @@
 #! /usr/bin/env bash
 
-segment_generate_python_env() {
+segments::python_env() {
   if [[ -n "$VIRTUAL_ENV" ]]; then
     segment_value="${VIRTUAL_ENV##*/}"
   else

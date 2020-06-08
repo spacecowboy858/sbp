@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-segment_generate_rescuetime() {
+segments::rescuetime() {
   local cache_file="${cache_folder}/rescuetime.csv"
 
   if [[ -f "$cache_file" ]]; then

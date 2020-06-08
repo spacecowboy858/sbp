@@ -1,6 +1,6 @@
 #! /usr/bin/env bash
 
-segment_generate_command() {
+segments::command() {
   local command_exit_code=$1
   local command_time=$2
   local timer_m=0

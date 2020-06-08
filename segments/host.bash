@@ -1,6 +1,6 @@
 #! /usr/bin/env bash
 
-segment_generate_host() {
+segments::host() {
 
   if [[ -n "$SSH_CLIENT" ]]; then
     host_value="${USER}@${HOSTNAME}"

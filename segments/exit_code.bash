@@ -1,6 +1,6 @@
 #! /usr/bin/env bash
 
-segment_generate_exit_code() {
+segments:exit_code() {
   local return_code=$1
   if [[ -z "$return_code" ]]; then
     return_code=0
