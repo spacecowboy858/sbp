@@ -15,6 +15,7 @@ _sbp_print_usage() {
   debug     - Toggle debug mode
   status    - Show the current configuration
   config    - Opens the config in \$EDITOR ($EDITOR)
+  colors    - Opens the colors config in \$EDITOR ($EDITOR)
 EOF
 }
 
@@ -39,6 +40,15 @@ _sbp_edit_config() {
   else
     echo "No \$EDITOR set, unable to open config"
     echo "You can edit it here: ${HOME}/.config/sbp/settings.conf"
+  fi
+}
+
+_sbp_edit_colors() {
+  if [[ -n "$EDITOR" ]]; then
+    $EDITOR "${HOME}/.config/sbp/colors.conf"
+  else
+    echo "No \$EDITOR set, unable to open color"
+    echo "You can edit it here: ${HOME}/.config/sbp/colors.conf"
   fi
 }
 
@@ -99,6 +109,9 @@ sbp() {
     'config') # Open the config file
       _sbp_edit_config
       ;;
+    'colors') # Open the config file
+      _sbp_edit_colors
+      ;;
     'debug') # Toggle debug mode
       _sbp_toggle_debug
       ;;
@@ -142,7 +155,7 @@ _sbp() {
       done
       ;;
     *)
-      words=('segments' 'hooks' 'peekaboo' 'color' 'layout' 'themes' 'reload' 'help' 'config' 'status' 'debug')
+      words=('segments' 'hooks' 'peekaboo' 'color' 'layout' 'themes' 'reload' 'help' 'config' 'colors' 'status' 'debug')
       ;;
   esac
 

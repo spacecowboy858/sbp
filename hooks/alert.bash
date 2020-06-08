@@ -2,7 +2,7 @@
 
 SETTINGS_ALERT_THRESHOLD="${SETTINGS_ALERT_THRESHOLD:-60}"
 
-function alert_exec() { # User notification
+function hooks::alert::notify() { # User notification
   [[ -z "$2" ]] && return
 
   title=$1
@@ -17,7 +17,7 @@ function alert_exec() { # User notification
   fi
 }
 
-function hook_execute_alert {
+function hooks::alert::execute {
   local exit_code=$1
   local command_time=$2
 
@@ -33,6 +33,6 @@ function hook_execute_alert {
       message="Time spent was ${command_time}s"
     fi
 
-    alert_exec "$title" "$message"
+    hooks::alert::notify "$title" "$message"
   fi
 }

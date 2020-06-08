@@ -12,9 +12,9 @@ execute::get_script() {
   local local_script="${config_folder}/${type}s/${feature}.bash"
   local global_script="${SBP_PATH}/${type}s/${feature}.bash"
 
-  if [[ -x "$local_script" ]]; then
+  if [[ -f "$local_script" ]]; then
     return_value="$local_script"
-  elif [[ -x "$global_script" ]]; then
+  elif [[ -f "$global_script" ]]; then
     return_value="$global_script"
   else
     log::error "Could not find $local_script"
@@ -28,8 +28,11 @@ execute::execute_prompt_hooks() {
   for hook in "${SETTINGS_HOOKS[@]}"; do
     execute::get_script 'hook_script' 'hook' "$hook"
 
-    if [[ -n "$hook_script" ]]; then
-      (source "$hook_script" && nohup hook_execute_"$hook" "$COMMAND_EXIT_CODE" "$COMMAND_DURATION" &>/dev/null &)
+    if [[ -f "$hook_script" ]]; then
+      (trap '' HUP INT
+        source "$hook_script"
+        "hooks::${hook}::execute" "$COMMAND_EXIT_CODE" "$COMMAND_DURATION"
+      ) </dev/null &>/dev/null &
     fi
   done
 }
@@ -42,7 +45,7 @@ execute::execute_prompt_segment() {
   local segment_script
   execute::get_script 'segment_script' 'segment' "$segment"
 
-  if [[ -n "$segment_script" ]]; then
+  if [[ -f "$segment_script" ]]; then
     source "$segment_script"
 
     local primary_color_var="SETTINGS_${segment^^}_COLOR_PRIMARY"
