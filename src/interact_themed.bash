@@ -1,11 +1,11 @@
 #! /usr/bin/env bash
 
-# shellcheck source=functions/decorate.bash
-source "${SBP_PATH}/functions/decorate.bash"
-# shellcheck source=functions/configure.bash
-source "${SBP_PATH}/functions/configure.bash"
-# shellcheck source=functions/execute.bash
-source "${SBP_PATH}/functions/execute.bash"
+# shellcheck source=src/decorate.bash
+source "${SBP_PATH}/src/decorate.bash"
+# shellcheck source=src/configure.bash
+source "${SBP_PATH}/src/configure.bash"
+# shellcheck source=src/execute.bash
+source "${SBP_PATH}/src/execute.bash"
 
 
 configure::load_config

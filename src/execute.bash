@@ -10,7 +10,7 @@ execute::get_script() {
   fi
 
   local local_script="${config_folder}/${type}s/${feature}.bash"
-  local global_script="${SBP_PATH}/${type}s/${feature}.bash"
+  local global_script="${SBP_PATH}/src/${type}s/${feature}.bash"
 
   if [[ -f "$local_script" ]]; then
     return_value="$local_script"

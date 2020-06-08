@@ -4,10 +4,10 @@
 #   Simple Bash Prompt (SBP)    #
 #################################
 
-# shellcheck source=functions/interact.bash
-source "${SBP_PATH}/functions/interact.bash"
-# shellcheck source=functions/debug.bash
-source "${SBP_PATH}/functions/debug.bash"
+# shellcheck source=src/interact.bash
+source "${SBP_PATH}/src/interact.bash"
+# shellcheck source=src/debug.bash
+source "${SBP_PATH}/src/debug.bash"
 
 if [[ -d "/run/user/${UID}" ]]; then
   _SBP_CACHE=$(mktemp -d --tmpdir="/run/user/${UID}") && trap 'rm -rf "$_SBP_CACHE"' EXIT;
@@ -44,7 +44,7 @@ _sbp_set_prompt() {
   fi
   printf '\e]2;%s\007' "$title"
 
-  PS1=$(bash "${SBP_PATH}/functions/main.bash" "$command_status" "$command_duration")
+  PS1=$(bash "${SBP_PATH}/src/main.bash" "$command_status" "$command_duration")
   [[ -n "$SBP_DEBUG" ]] && debug::tick_timer "Done"
 
 }

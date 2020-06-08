@@ -1,4 +1,4 @@
-_sbp_themed_helper="${SBP_PATH}/functions/interact_themed.bash"
+_sbp_themed_helper="${SBP_PATH}/src/interact_themed.bash"
 
 _sbp_print_usage() {
   cat << EOF
