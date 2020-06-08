@@ -6,6 +6,8 @@ source "${SBP_PATH}/src/decorate.bash"
 source "${SBP_PATH}/src/configure.bash"
 # shellcheck source=src/execute.bash
 source "${SBP_PATH}/src/execute.bash"
+# shellcheck source=src/debug.bash
+source "${SBP_PATH}/src/debug.bash"
 
 
 configure::load_config
@@ -35,12 +37,11 @@ EOF
 }
 
 list_segments() {
-  local active_segments=( "${SETTINGS_SEGMENTS_left[@]}" "${SETTINGS_SEGMENTS_right[@]}" )
-  for segment in $(configure::list_feature_files 'segments'); do
+  for segment_path in $(configure::list_feature_files 'segments'); do
     local status='disabled'
-    local segment_file="${segment##*/}"
+    local segment_file="${segment_path##*/}"
     local segment_name="${segment_file/.bash/}"
-    if printf '%s.bash\n' "${active_segments[@]}" | grep -qo "${segment_name}"; then
+    if printf '%s.bash\n' "${SETTINGS_SEGMENTS[@]}" | grep -qo "${segment_name}"; then
       if [[ -f "${config_folder}/peekaboo/${segment_name/.bash/}" ]]; then
         status='hidden'
       else
@@ -49,7 +50,7 @@ list_segments() {
     fi
 
     debug::start_timer
-    (execute::execute_prompt_segment "$segment")
+    (execute::execute_prompt_segment "$segment_name" &>/dev/null)
     duration=$(debug::tick_timer 2>&1 | tr -d ':')
 
     echo "${segment_name}: ${status}" "$duration"
@@ -73,7 +74,7 @@ list_hooks() {
 }
 
 list_layouts() {
-  for layout in $(configure::list_feature_files 'themes/layouts'); do
+  for layout in $(configure::list_feature_files 'layouts'); do
     file="${layout##*/}"
     printf '  %s\n' "${file/.bash/}"
   done
@@ -95,7 +96,7 @@ show_current_colors() {
 }
 
 list_colors() {
-  for color in $(configure::list_feature_files 'themes/colors'); do
+  for color in $(configure::list_feature_files 'colors'); do
     source "$color"
     file="${color##*/}"
     printf '\n%s \n' "${file/.bash/}"

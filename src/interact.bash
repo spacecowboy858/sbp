@@ -145,12 +145,12 @@ _sbp() {
       done
       ;;
     'color')
-      for color in $($_sbp_themed_helper list_words 'themes/colors'); do
+      for color in $($_sbp_themed_helper list_words 'colors'); do
         words+=("$color")
       done
       ;;
     'layout')
-      for layout in $($_sbp_themed_helper list_words 'themes/layouts'); do
+      for layout in $($_sbp_themed_helper list_words 'layouts'); do
         words+=("$layout")
       done
       ;;
