@@ -3,7 +3,7 @@
 hooks::rescuetime::execute() {
   refresh_rate="${SETTINGS_RESCUETIME_REFRESH_RATE:-600}"
   if [[ -z "$cache_folder" ]]; then
-    log::error "No cache folder"
+    debug::log_error "No cache folder"
   fi
   cache_file="${cache_folder}/rescuetime.csv"
 
@@ -21,7 +21,7 @@ hooks::rescuetime::execute() {
   fi
 
   if [[ -z $RESCUETIME_API_KEY ]]; then
-    log::error "RESCUETIME_API_KEY not set"
+    debug::log_error "RESCUETIME_API_KEY not set"
     exit 0
   fi
 
@@ -29,7 +29,7 @@ hooks::rescuetime::execute() {
   result=$(curl -s "$endpoint" | grep -v '^Rank')
   exit_code=$?
   if [[ "$exit_code" -gt 0 ]]; then
-    log::error "Could not reach rescuetime endpoint"
+    debug::log_error "Could not reach rescuetime endpoint"
     exit 0
   fi
 

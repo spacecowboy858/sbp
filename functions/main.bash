@@ -6,8 +6,8 @@ source "${SBP_PATH}/functions/decorate.bash"
 source "${SBP_PATH}/functions/configure.bash"
 # shellcheck source=functions/execute.bash
 source "${SBP_PATH}/functions/execute.bash"
-# shellcheck source=functions/log.bash
-source "${SBP_PATH}/functions/log.bash"
+# shellcheck source=functions/debug.bash
+source "${SBP_PATH}/functions/debug.bash"
 
 configure::load_config
 

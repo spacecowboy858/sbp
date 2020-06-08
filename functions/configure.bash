@@ -33,8 +33,8 @@ configure::list_feature_names() {
 configure::set_colors() {
   local theme_name=$1
   if [[ -z "$theme_name" ]]; then
-    log::error "No theme name set"
-    log::info "Using the default theme"
+    debug::log_error "No theme name set"
+    debug::log_info "Using the default theme"
     source "${SBP_PATH}/themes/colors/default.bash"
     return 1
   fi
@@ -47,9 +47,9 @@ configure::set_colors() {
   elif [[ -f "$sbp_theme" ]]; then
     source "$sbp_theme"
   else
-    log::error "Could not find theme file: ${user_theme}"
-    log::error "Could not find theme file: ${sbp_theme}"
-    log::info "Using the default theme"
+    debug::log_error "Could not find theme file: ${user_theme}"
+    debug::log_error "Could not find theme file: ${sbp_theme}"
+    debug::log_info "Using the default theme"
     source "${SBP_PATH}/themes/colors/default.bash"
   fi
 }
@@ -57,8 +57,8 @@ configure::set_colors() {
 configure::set_layout() {
   local layout_name=$1
   if [[ -z "$layout_name" ]]; then
-    log::error "No layout name set"
-    log::info "Using the default layout"
+    debug::log_error "No layout name set"
+    debug::log_info "Using the default layout"
     source "${SBP_PATH}/themes/layouts/default.bash"
     return 1
   fi
@@ -71,9 +71,9 @@ configure::set_layout() {
   elif [[ -f "$sbp_layout" ]]; then
     source "$sbp_layout"
   else
-    log::error "Could not find theme file: ${user_layout}"
-    log::error "Could not find theme file: ${sbp_layout}"
-    log::info "Using the default theme"
+    debug::log_error "Could not find theme file: ${user_layout}"
+    debug::log_error "Could not find theme file: ${sbp_layout}"
+    debug::log_info "Using the default theme"
     source "${SBP_PATH}/themes/layouts/default.bash"
   fi
 }
@@ -82,14 +82,14 @@ configure::load_config() {
   [[ -d "$cache_folder" ]] || mkdir -p "$cache_folder"
 
   if [[ ! -f "$config_file" ]]; then
-    log::info "Config file note found: ${config_file}"
-    log::info "Creating it.."
+    debug::log_info "Config file note found: ${config_file}"
+    debug::log_info "Creating it.."
     cp "$default_config_file" "$config_file"
   fi
 
   if [[ ! -f "$colors_file" ]]; then
-    log::info "Config file note found: ${colors_file}"
-    log::info "Creating it.."
+    debug::log_info "Config file note found: ${colors_file}"
+    debug::log_info "Creating it.."
     cp "$default_colors_file" "$colors_file"
   fi
 

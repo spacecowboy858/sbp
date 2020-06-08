@@ -17,9 +17,9 @@ execute::get_script() {
   elif [[ -f "$global_script" ]]; then
     return_value="$global_script"
   else
-    log::error "Could not find $local_script"
-    log::error "Could not find $global_script"
-    log::error "Make sure it exists"
+    debug::log_error "Could not find $local_script"
+    debug::log_error "Could not find $global_script"
+    debug::log_error "Make sure it exists"
   fi
 }
 

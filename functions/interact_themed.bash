@@ -48,9 +48,9 @@ list_segments() {
       fi
     fi
 
-    _sbp_timer_start
+    debug::start_timer
     (execute::execute_prompt_segment "$segment")
-    duration=$(_sbp_timer_tick 2>&1 | tr -d ':')
+    duration=$(debug::tick_timer 2>&1 | tr -d ':')
 
     echo "${segment_name}: ${status}" "$duration"
   done | column -t -c " "
