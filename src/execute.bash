@@ -31,7 +31,7 @@ execute::execute_prompt_hooks() {
     if [[ -f "$hook_script" ]]; then
       (trap '' HUP INT
         source "$hook_script"
-        "hooks::${hook}::execute" "$COMMAND_EXIT_CODE" "$COMMAND_DURATION"
+        "hooks::${hook}" "$COMMAND_EXIT_CODE" "$COMMAND_DURATION"
       ) </dev/null &>/dev/null &
     fi
   done

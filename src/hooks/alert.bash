@@ -17,7 +17,7 @@ function hooks::alert::notify() { # User notification
   fi
 }
 
-function hooks::alert::execute {
+function hooks::alert {
   local exit_code=$1
   local command_time=$2
 

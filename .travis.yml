@@ -6,4 +6,4 @@ addons:
   apt:
     packages:
     - bc
-script: ./test
+script: npm install -g bats && bats -r -T test/

@@ -1,6 +1,6 @@
 #! /usr/bin/env bash
 
-hooks::rescuetime::execute() {
+hooks::rescuetime() {
   refresh_rate="${SETTINGS_RESCUETIME_REFRESH_RATE:-600}"
   if [[ -z "$cache_folder" ]]; then
     debug::log_error "No cache folder"
